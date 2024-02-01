@@ -8,10 +8,12 @@ import kipi.services.TransactionService
 import kipi.utils.HttpClientGeneratorUtils.generateHttpClient
 
 class Dependencies {
-    private val authService = AuthService(generateHttpClient("localhost:7005"))
-    private val customerService = CustomerService(generateHttpClient("localhost:7003"))
-    private val accountService = AccountService(generateHttpClient("localhost:7002"))
-    private val transactionService = TransactionService(generateHttpClient("localhost:7001"))
+    val config = Config()
+
+    private val authService = AuthService(generateHttpClient(config.authServiceUrl))
+    private val customerService = CustomerService(generateHttpClient(config.customerServiceUrl))
+    private val accountService = AccountService(generateHttpClient(config.accountServiceUrl))
+    private val transactionService = TransactionService(generateHttpClient(config.transactionServiceUrl))
 
     val registrationController = RegistrationController(authService, customerService)
     val loginController = LoginController(authService)

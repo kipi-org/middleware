@@ -1,8 +1,10 @@
 package kipi
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import io.ktor.server.request.*
+import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.*
 import kipi.routes.AccountRoutes.createAccountRoutes
@@ -28,6 +30,10 @@ fun Application.routes(deps: Dependencies) {
 
     routing {
         plugin(authFilter)
+
+        get("/health") {
+            call.respond(HttpStatusCode.OK)
+        }
 
         createAuthRoutes(deps)
         createCustomerRoutes(deps)
