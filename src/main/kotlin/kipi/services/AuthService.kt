@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kipi.dto.Credentials
 import kipi.dto.ErrorResponse
+import kipi.dto.IdCredentials
 import kipi.dto.SessionResponse
 import kipi.exceptions.AuthException
 import kipi.exceptions.SessionException
@@ -31,6 +32,19 @@ class AuthService(
     suspend fun login(credentials: Credentials): SessionResponse {
         val response = client.post {
             url { path("/login") }
+            contentType(ContentType.Application.Json)
+            setBody(credentials)
+        }
+
+        when (response.status.value) {
+            403 -> throw AuthException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
+
+    suspend fun loginById(credentials: IdCredentials): SessionResponse {
+        val response = client.post {
+            url { path("/loginById") }
             contentType(ContentType.Application.Json)
             setBody(credentials)
         }

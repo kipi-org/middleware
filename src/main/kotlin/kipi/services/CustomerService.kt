@@ -39,4 +39,19 @@ class CustomerService(
             else -> return response.body()
         }
     }
+
+    suspend fun findCustomerByEmail(email: String): Customer {
+        val response = client.get {
+            url {
+                path("/customer/email")
+            }
+            contentType(Json)
+            parameter("email", email)
+        }
+
+        when (response.status.value) {
+            404 -> throw CustomerNotExistException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
 }
