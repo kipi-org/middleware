@@ -47,6 +47,10 @@ fun Application.init() {
         allowMethod(Get)
         allowOrigins { true }
         allowHeaders { true }
+        allowCredentials = true
+        allowSameOrigin = true
+        allowXHttpMethodOverride()
+        allowNonSimpleContentTypes = true
     }
     val mapper = jsonMapper {
         disable(WRITE_DATES_AS_TIMESTAMPS)
