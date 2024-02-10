@@ -15,6 +15,7 @@ import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpHeaders.Origin
 import io.ktor.http.HttpHeaders.UserAgent
+import io.ktor.http.HttpMethod.Companion.Delete
 import io.ktor.http.HttpMethod.Companion.Get
 import io.ktor.http.HttpMethod.Companion.Options
 import io.ktor.http.HttpMethod.Companion.Post
@@ -41,8 +42,10 @@ fun Application.init() {
     install(CORS) {
         anyHost()
         allowMethod(Options)
+        allowMethod(Delete)
         allowMethod(Post)
         allowMethod(Get)
+        allowOrigins { true }
         allowHeaders { true }
     }
     val mapper = jsonMapper {
