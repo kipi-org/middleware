@@ -16,7 +16,7 @@ class Dependencies {
     private val transactionService = TransactionService(generateHttpClient(config.transactionServiceUrl))
 
     val registrationController = RegistrationController(authService, customerService)
-    val loginController = LoginController(authService)
+    val loginController = LoginController(authService, customerService)
     val logoutController = LogoutController(authService)
     val verifyTokenController = VerifyTokenController(authService)
     val revokeTokenController = RevokeTokenController(authService)
@@ -39,4 +39,5 @@ class Dependencies {
     val transactionCreateController = TransactionCreateController(transactionService, accountService)
     val transactionFindController = TransactionFindController(transactionService, accountService)
     val transactionDeleteController = TransactionDeleteController(transactionService)
+    val gapFetchController = GapFetchController(transactionService, accountService)
 }

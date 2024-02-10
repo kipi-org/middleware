@@ -6,11 +6,9 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.util.*
 import kipi.Dependencies
-import kipi.dto.CategoryDraft
-import kipi.dto.GoalDraft
-import kipi.dto.LimitDraft
-import kipi.dto.TransactionDraft
+import kipi.dto.*
 import kipi.userId
+import java.time.LocalDateTime
 
 object TransactionRoutes {
     fun Routing.createTransactionRoutes(deps: Dependencies) = with(deps) {
@@ -74,10 +72,20 @@ object TransactionRoutes {
             call.respond(HttpStatusCode.OK, transactionCreatedResponse)
         }
 
-        get("/transactions") {
-            val transactions = transactionFindController.handle(call.userId)
+        route("/transactions") {
+            get {
+                val transactions =
+                    transactionFindController.handle(call.userId, call.from, call.to, call.page, call.pageSize)
 
-            call.respond(HttpStatusCode.OK, transactions)
+                call.respond(HttpStatusCode.OK, transactions)
+            }
+
+            get("/gaps/{gapType}") {
+                val gaps =
+                    gapFetchController.handle(call.userId, call.gapType, call.page, call.pageSize)
+
+                call.respond(HttpStatusCode.OK, gaps)
+            }
         }
 
         delete("/transaction/{transactionId}") {
@@ -101,4 +109,19 @@ object TransactionRoutes {
 
     private val ApplicationCall.transactionId: Long
         get() = this.parameters.getOrFail("transactionId").toLong()
+
+    private val ApplicationCall.from: LocalDateTime?
+        get() = this.parameters["from"]?.let { LocalDateTime.parse(it) }
+
+    private val ApplicationCall.to: LocalDateTime?
+        get() = this.parameters["to"]?.let { LocalDateTime.parse(it) }
+
+    private val ApplicationCall.gapType: GapType
+        get() = this.parameters.getOrFail("gapType").let { GapType.valueOf(it) }
+
+    private val ApplicationCall.page: Int
+        get() = this.parameters["page"]?.toInt() ?: 0
+
+    private val ApplicationCall.pageSize: Int
+        get() = this.parameters["pageSize"]?.toInt() ?: 15
 }

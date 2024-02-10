@@ -1,23 +1,22 @@
 package kipi.controllers
 
-import kipi.dto.Transaction
+import kipi.dto.GapType
+import kipi.dto.TransactionGap
 import kipi.services.AccountService
 import kipi.services.TransactionService
-import java.time.LocalDateTime
 
-class TransactionFindController(
+class GapFetchController(
     private val transactionService: TransactionService,
     private val accountService: AccountService
 ) {
     suspend fun handle(
         userId: Long,
-        from: LocalDateTime? = null,
-        to: LocalDateTime? = null,
+        gapType: GapType,
         page: Int,
         pageSize: Int
-    ): List<Transaction> {
+    ): List<TransactionGap> {
         val accounts = accountService.findAccounts(userId)
 
-        return transactionService.findTransactions(userId, accounts.map { it.id }, from, to, page, pageSize)
+        return transactionService.findTransactionsGaps(userId, gapType, accounts.map { it.id }, page, pageSize)
     }
 }

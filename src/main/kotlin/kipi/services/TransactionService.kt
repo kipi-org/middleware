@@ -9,6 +9,7 @@ import kipi.dto.*
 import kipi.exceptions.CategoryException
 import kipi.exceptions.GoalCreateException
 import kipi.exceptions.LimitCreateException
+import java.time.LocalDateTime
 
 class TransactionService(
     private val client: HttpClient
@@ -113,10 +114,41 @@ class TransactionService(
         }
     }
 
-    suspend fun findTransactions(userId: Long, accountsIds: List<Long>): List<Transaction> {
+    suspend fun findTransactions(
+        userId: Long,
+        accountsIds: List<Long>,
+        from: LocalDateTime? = null,
+        to: LocalDateTime? = null,
+        page: Int? = null,
+        pageSize: Int? = null
+    ): List<Transaction> {
         val response = client.get {
             url { path("/customer/$userId/transactions") }
             if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
+            parameter("page", page)
+            parameter("pageSize", pageSize)
+            parameter("from", from)
+            parameter("to", to)
+        }
+
+        when (response.status.value) {
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
+
+    suspend fun findTransactionsGaps(
+        userId: Long,
+        gapType: GapType,
+        accountsIds: List<Long>,
+        page: Int? = null,
+        pageSize: Int? = null
+    ): List<TransactionGap> {
+        val response = client.get {
+            url { path("/customer/$userId/transactions/gaps/$gapType") }
+            if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
+            parameter("page", page)
+            parameter("pageSize", pageSize)
         }
 
         when (response.status.value) {
