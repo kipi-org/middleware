@@ -17,6 +17,7 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import kipi.dto.ErrorResponse
@@ -28,6 +29,9 @@ fun main() {
 }
 
 fun Application.init() {
+    install(CORS) {
+        anyHost()
+    }
     val mapper = jsonMapper {
         disable(WRITE_DATES_AS_TIMESTAMPS)
         disable(FAIL_ON_UNKNOWN_PROPERTIES)

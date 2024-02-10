@@ -27,6 +27,7 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages-jvm")
     implementation("io.ktor:ktor-server-call-logging-jvm")
     implementation("io.ktor:ktor-server-content-negotiation-jvm")
+    implementation("io.ktor:ktor-server-cors")
     implementation("io.ktor:ktor-client-core")
     implementation("io.ktor:ktor-client-json")
     implementation("io.ktor:ktor-client-apache5")
