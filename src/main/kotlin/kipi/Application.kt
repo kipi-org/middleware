@@ -8,17 +8,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
-import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
-import io.ktor.http.HttpHeaders.AcceptEncoding
 import io.ktor.http.HttpHeaders.Authorization
-import io.ktor.http.HttpHeaders.ContentType
-import io.ktor.http.HttpHeaders.Origin
-import io.ktor.http.HttpHeaders.UserAgent
 import io.ktor.http.HttpMethod.Companion.Delete
-import io.ktor.http.HttpMethod.Companion.Get
-import io.ktor.http.HttpMethod.Companion.Options
-import io.ktor.http.HttpMethod.Companion.Post
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.http.HttpStatusCode.Companion.UnprocessableEntity
@@ -40,17 +32,9 @@ fun main() {
 
 fun Application.init() {
     install(CORS) {
-        anyHost()
-        allowMethod(Options)
         allowMethod(Delete)
-        allowMethod(Post)
-        allowMethod(Get)
-        allowOrigins { true }
-        allowHeaders { true }
-        allowCredentials = true
-        allowSameOrigin = true
-        allowXHttpMethodOverride()
-        allowNonSimpleContentTypes = true
+        allowHeader(Authorization)
+        anyHost()
     }
     val mapper = jsonMapper {
         disable(WRITE_DATES_AS_TIMESTAMPS)
