@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import io.ktor.http.ContentType.Application.Json
 import io.ktor.http.HttpHeaders.Authorization
+import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpMethod.Companion.Delete
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
@@ -34,7 +35,10 @@ fun Application.init() {
     install(CORS) {
         allowMethod(Delete)
         allowHeader(Authorization)
+        allowHeader(ContentType)
         anyHost()
+        allowOrigins { true }
+        allowHeaders { true }
     }
     val mapper = jsonMapper {
         disable(WRITE_DATES_AS_TIMESTAMPS)
