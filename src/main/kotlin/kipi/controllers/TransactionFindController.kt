@@ -18,6 +18,6 @@ class TransactionFindController(
     ): List<Transaction> {
         val accounts = accountService.findAccounts(userId)
 
-        return transactionService.findTransactions(userId, accounts.map { it.id }, from, to, page, pageSize)
+        return transactionService.findTransactions(userId, accounts.mapNotNull { it.id }, from, to, page, pageSize)
     }
 }

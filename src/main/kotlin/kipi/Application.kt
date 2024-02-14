@@ -69,7 +69,6 @@ fun Application.init() {
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
-
         exception<CustomerNotExistException> { call, cause ->
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
@@ -87,6 +86,10 @@ fun Application.init() {
         }
 
         exception<AccountExistException> { call, cause ->
+            call.respond(Forbidden, ErrorResponse(cause.message))
+        }
+
+        exception<AccountException> { call, cause ->
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
     }

@@ -7,6 +7,8 @@ import io.ktor.http.*
 import kipi.dto.Account
 import kipi.dto.AccountDraft
 import kipi.dto.ElementCreatedResponse
+import kipi.dto.ErrorResponse
+import kipi.exceptions.AccountException
 
 class AccountService(
     private val client: HttpClient
@@ -18,7 +20,10 @@ class AccountService(
             setBody(accountDraft)
         }
 
-        return response.body()
+        when (response.status.value) {
+            403 -> throw AccountException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
     }
 
     suspend fun findAccounts(userId: Long): List<Account> {

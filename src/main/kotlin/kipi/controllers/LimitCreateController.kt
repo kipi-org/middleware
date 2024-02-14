@@ -11,6 +11,6 @@ class LimitCreateController(
 ) {
     suspend fun handle(userId: Long, limitDraft: LimitDraft): ElementCreatedResponse {
         val accounts = accountService.findAccounts(userId)
-        return transactionService.createLimit(userId, limitDraft, accounts.map { it.id })
+        return transactionService.createLimit(userId, limitDraft, accounts.mapNotNull { it.id })
     }
 }

@@ -17,6 +17,6 @@ class GapFetchController(
     ): List<TransactionGap> {
         val accounts = accountService.findAccounts(userId)
 
-        return transactionService.findTransactionsGaps(userId, gapType, accounts.map { it.id }, page, pageSize)
+        return transactionService.findTransactionsGaps(userId, gapType, accounts.mapNotNull { it.id }, page, pageSize)
     }
 }

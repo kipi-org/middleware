@@ -24,7 +24,7 @@ class Dependencies {
     val customerFindController = CustomerFindController(customerService)
 
     val accountCreateController = AccountCreateController(accountService)
-    val accountFindController = AccountFindController(accountService)
+    val accountFindController = AccountFindController(accountService, transactionService)
     val accountDeleteController = AccountDeleteController(accountService)
 
     val categoryCreateController = CategoryCreateController(transactionService)
