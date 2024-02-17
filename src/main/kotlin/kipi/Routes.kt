@@ -18,7 +18,7 @@ fun Application.routes(deps: Dependencies) {
     val nonAuthEndpoints = listOf("/registration", "/login")
 
     val authFilter = createApplicationPlugin("authFilter") {
-        on(CallSetup) { call ->
+        onCall { call ->
             if (call.request.httpMethod != HttpMethod.Options && call.request.uri !in nonAuthEndpoints) {
                 val sessionResponse = deps.verifyTokenController.handle(call.request.header("Authorization")!!)
                 call.attributes.put(userIdKey, sessionResponse.userId)
