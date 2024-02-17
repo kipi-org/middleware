@@ -95,10 +95,18 @@ object TransactionRoutes {
             }
         }
 
-        delete("/transaction/{transactionId}") {
-            transactionDeleteController.handle(call.userId, call.transactionId)
+        route("/transaction/{transactionId}") {
+            delete {
+                transactionDeleteController.handle(call.userId, call.transactionId)
 
-            call.respond(HttpStatusCode.OK)
+                call.respond(HttpStatusCode.OK)
+            }
+
+            get {
+                val transaction = oneTransactionFindController.handle(call.userId, call.transactionId)
+
+                call.respond(HttpStatusCode.OK, transaction)
+            }
         }
 
         get("/categories/statistics") {

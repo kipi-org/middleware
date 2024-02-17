@@ -14,6 +14,7 @@ import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpMethod.Companion.Delete
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
+import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import io.ktor.http.HttpStatusCode.Companion.UnprocessableEntity
 import io.ktor.serialization.jackson.*
@@ -92,6 +93,10 @@ fun Application.init() {
 
         exception<AccountException> { call, cause ->
             call.respond(Forbidden, ErrorResponse(cause.message))
+        }
+
+        exception<TransactionNotExistException> { call, cause ->
+            call.respond(NotFound, ErrorResponse(cause.message))
         }
 
         exception<RuntimeException> { call, _ ->

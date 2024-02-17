@@ -9,6 +9,7 @@ import kipi.dto.*
 import kipi.exceptions.CategoryException
 import kipi.exceptions.GoalCreateException
 import kipi.exceptions.LimitCreateException
+import kipi.exceptions.TransactionNotExistException
 import java.time.LocalDateTime
 
 class TransactionService(
@@ -129,8 +130,19 @@ class TransactionService(
             parameter("to", to)
         }
 
+        return response.body()
+    }
+
+    suspend fun findTransaction(
+        userId: Long,
+        transactionId: Long
+    ): List<Transaction> {
+        val response = client.get {
+            url { path("/customer/$userId/transaction/$transactionId") }
+        }
+
         when (response.status.value) {
-            403 -> throw CategoryException(response.body<ErrorResponse>().message)
+            404 -> throw TransactionNotExistException(response.body<ErrorResponse>().message)
             else -> return response.body()
         }
     }

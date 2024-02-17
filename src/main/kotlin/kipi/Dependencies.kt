@@ -41,4 +41,5 @@ class Dependencies {
     val transactionDeleteController = TransactionDeleteController(transactionService)
     val gapFetchController = GapFetchController(transactionService, accountService)
     val categoriesStatisticsController = CategoriesStatisticsController(transactionService, accountService)
+    val oneTransactionFindController = OneTransactionFindController(transactionService)
 }
