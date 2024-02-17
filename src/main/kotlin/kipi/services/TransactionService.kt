@@ -98,9 +98,7 @@ class TransactionService(
     }
 
     suspend fun createTransaction(
-        userId: Long,
-        accountId: Long,
-        transactionDraft: TransactionDraft
+        userId: Long, accountId: Long, transactionDraft: TransactionDraft
     ): ElementCreatedResponse {
         val response = client.post {
             url { path("/customer/$userId/account/$accountId/transaction") }
@@ -138,11 +136,7 @@ class TransactionService(
     }
 
     suspend fun findTransactionsGaps(
-        userId: Long,
-        gapType: GapType,
-        accountsIds: List<Long>,
-        page: Int? = null,
-        pageSize: Int? = null
+        userId: Long, gapType: GapType, accountsIds: List<Long>, page: Int? = null, pageSize: Int? = null
     ): List<TransactionGap> {
         val response = client.get {
             url { path("/customer/$userId/transactions/gaps/$gapType") }
@@ -161,6 +155,22 @@ class TransactionService(
         client.delete {
             url { path("/customer/$userId/transaction/$transactionId") }
         }
+    }
+
+    suspend fun getCategoriesStatistics(
+        userId: Long,
+        accountsIds: List<Long>,
+        from: LocalDateTime? = null,
+        to: LocalDateTime? = null
+    ): List<CategoryStatistics> {
+        val response = client.get {
+            url { path("/customer/$userId/categories/statistics") }
+            if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
+            parameter("from", from)
+            parameter("to", to)
+        }
+
+        return response.body()
     }
 
     private fun List<Long>.toAccountsIdsString() = this.joinToString(separator = ",")

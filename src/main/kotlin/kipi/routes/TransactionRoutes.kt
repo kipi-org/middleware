@@ -75,7 +75,14 @@ object TransactionRoutes {
         route("/transactions") {
             get {
                 val transactions =
-                    transactionFindController.handle(call.userId, call.accountsIds, call.from, call.to, call.page, call.pageSize)
+                    transactionFindController.handle(
+                        call.userId,
+                        call.accountsIds,
+                        call.from,
+                        call.to,
+                        call.page,
+                        call.pageSize
+                    )
 
                 call.respond(HttpStatusCode.OK, transactions)
             }
@@ -92,6 +99,13 @@ object TransactionRoutes {
             transactionDeleteController.handle(call.userId, call.transactionId)
 
             call.respond(HttpStatusCode.OK)
+        }
+
+        get("/categories/statistics") {
+            val statistics =
+                categoriesStatisticsController.handle(call.userId, call.accountsIds, call.from, call.to)
+
+            call.respond(HttpStatusCode.OK, statistics)
         }
     }
 
