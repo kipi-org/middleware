@@ -9,6 +9,7 @@ import io.ktor.util.*
 import kipi.routes.AccountRoutes.createAccountRoutes
 import kipi.routes.AuthRoutes.createAuthRoutes
 import kipi.routes.CustomerRoutes.createCustomerRoutes
+import kipi.routes.HelperRoutes.createHelperRoutes
 import kipi.routes.TransactionRoutes.createTransactionRoutes
 
 private val userIdKey = AttributeKey<Long>("userId")
@@ -38,6 +39,7 @@ fun Application.routes(deps: Dependencies) {
         createCustomerRoutes(deps)
         createAccountRoutes(deps)
         createTransactionRoutes(deps)
+        createHelperRoutes(deps)
     }
 }
 

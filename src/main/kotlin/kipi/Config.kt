@@ -18,4 +18,5 @@ class Config {
     val customerServiceUrl = getEnv("CUSTOMER_SERVICE")
     val accountServiceUrl = getEnv("ACCOUNT_SERVICE")
     val transactionServiceUrl = getEnv("TRANSACTION_SERVICE")
+    val helperServiceUrl = getEnv("HELPER_SERVICE")
 }

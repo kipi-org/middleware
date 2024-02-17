@@ -1,10 +1,7 @@
 package kipi
 
 import kipi.controllers.*
-import kipi.services.AccountService
-import kipi.services.AuthService
-import kipi.services.CustomerService
-import kipi.services.TransactionService
+import kipi.services.*
 import kipi.utils.HttpClientGeneratorUtils.generateHttpClient
 
 class Dependencies {
@@ -14,6 +11,7 @@ class Dependencies {
     private val customerService = CustomerService(generateHttpClient(config.customerServiceUrl))
     private val accountService = AccountService(generateHttpClient(config.accountServiceUrl))
     private val transactionService = TransactionService(generateHttpClient(config.transactionServiceUrl))
+    private val helperService = HelperService(generateHttpClient(config.helperServiceUrl))
 
     val registrationController = RegistrationController(authService, customerService)
     val loginController = LoginController(authService, customerService)
@@ -42,4 +40,5 @@ class Dependencies {
     val gapFetchController = GapFetchController(transactionService, accountService)
     val categoriesStatisticsController = CategoriesStatisticsController(transactionService, accountService)
     val oneTransactionFindController = OneTransactionFindController(transactionService)
+    val helperAdviceController = HelperAdviceController(helperService, transactionService, accountService)
 }
