@@ -39,6 +39,8 @@ fun Application.init() {
         allowHeader(ContentType)
         anyHost()
         allowOrigins { true }
+        exposeHeader("Authorization")
+        exposeHeader("Access-Control-Allow-Origin")
         allowHeaders { true }
     }
     val mapper = jsonMapper {
