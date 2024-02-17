@@ -14,11 +14,11 @@ import kipi.routes.TransactionRoutes.createTransactionRoutes
 private val userIdKey = AttributeKey<Long>("userId")
 
 fun Application.routes(deps: Dependencies) {
-    val nonAuthEndpoints = listOf("/registration", "/login")
+    val nonAuthEndpoints = listOf("/registration", "/login", "/revoke")
 
     val authFilter = createApplicationPlugin("authFilter") {
         onCall { call ->
-            if (call.request.httpMethod != HttpMethod.Options && call.request.uri !in nonAuthEndpoints) {
+            if (call.request.httpMethod != HttpMethod.Options && nonAuthEndpoints.none { call.request.uri.contains(it) } ) {
                 val sessionResponse = deps.verifyTokenController.handle(call.request.header("Authorization")!!)
                 call.attributes.put(userIdKey, sessionResponse.userId)
             }
