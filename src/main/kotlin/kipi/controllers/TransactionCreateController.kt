@@ -12,7 +12,7 @@ class TransactionCreateController(
 ) {
     suspend fun handle(userId: Long, accountId: Long, transactionDraft: TransactionDraft): ElementCreatedResponse {
         accountService.findAccounts(userId).firstOrNull { it.id == accountId }
-            ?: throw AccountExistException("Account not exist")
+            ?: throw AccountExistException("account.not.exist")
 
         return transactionService.createTransaction(userId, accountId, transactionDraft)
     }
