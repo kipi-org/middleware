@@ -75,14 +75,14 @@ object TransactionRoutes {
         route("/transactions") {
             get {
                 val transactions =
-                    transactionFindController.handle(call.userId, call.from, call.to, call.page, call.pageSize)
+                    transactionFindController.handle(call.userId, call.accountsIds, call.from, call.to, call.page, call.pageSize)
 
                 call.respond(HttpStatusCode.OK, transactions)
             }
 
             get("/gaps/{gapType}") {
                 val gaps =
-                    gapFetchController.handle(call.userId, call.gapType, call.page, call.pageSize)
+                    gapFetchController.handle(call.userId, call.gapType, call.accountsIds, call.page, call.pageSize)
 
                 call.respond(HttpStatusCode.OK, gaps)
             }
@@ -124,4 +124,7 @@ object TransactionRoutes {
 
     private val ApplicationCall.pageSize: Int
         get() = this.parameters["pageSize"]?.toInt() ?: 15
+
+    private val ApplicationCall.accountsIds: List<Long>
+        get() = this.parameters["accountsIds"]?.split(",")?.map { it.toLong() } ?: emptyList()
 }

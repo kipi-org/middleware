@@ -12,11 +12,13 @@ class GapFetchController(
     suspend fun handle(
         userId: Long,
         gapType: GapType,
+        accountsIds: List<Long>,
         page: Int,
         pageSize: Int
     ): List<TransactionGap> {
-        val accounts = accountService.findAccounts(userId)
+        val ids = accountService.findAccounts(userId).mapNotNull { it.id }
+        val existIds = accountsIds.intersect(ids.toSet()).ifEmpty { ids }
 
-        return transactionService.findTransactionsGaps(userId, gapType, accounts.mapNotNull { it.id }, page, pageSize)
+        return transactionService.findTransactionsGaps(userId, gapType, existIds.toMutableList(), page, pageSize)
     }
 }
