@@ -3,7 +3,7 @@ package kipi.dto
 import java.io.Serializable
 
 data class RegistrationRequest(
-    val username: String?,
+    val username: String? = null,
     val email: String,
     val password: String,
     val name: String,
