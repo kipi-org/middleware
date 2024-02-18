@@ -9,7 +9,7 @@ class OneTransactionFindController(
     suspend fun handle(
         userId: Long,
         transactionId: Long
-    ): List<Transaction> {
+    ): Transaction {
         return transactionService.findTransaction(userId, transactionId)
     }
 }

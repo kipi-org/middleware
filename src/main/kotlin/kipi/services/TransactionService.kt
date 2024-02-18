@@ -147,7 +147,7 @@ class TransactionService(
     suspend fun findTransaction(
         userId: Long,
         transactionId: Long
-    ): List<Transaction> {
+    ): Transaction {
         val response = client.get {
             url { path("/customer/$userId/transaction/$transactionId") }
         }
