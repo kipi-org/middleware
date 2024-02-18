@@ -107,6 +107,12 @@ object TransactionRoutes {
 
                 call.respond(HttpStatusCode.OK, transaction)
             }
+
+            put<TransactionUpdates> {
+                transactionUpdateController.handle(call.userId, call.transactionId, it)
+
+                call.respond(HttpStatusCode.OK)
+            }
         }
 
         get("/categories/statistics") {

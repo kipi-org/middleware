@@ -41,4 +41,5 @@ class Dependencies {
     val categoriesStatisticsController = CategoriesStatisticsController(transactionService, accountService)
     val oneTransactionFindController = OneTransactionFindController(transactionService)
     val helperAdviceController = HelperAdviceController(helperService, transactionService, accountService)
+    val transactionUpdateController = TransactionUpdateController(transactionService)
 }

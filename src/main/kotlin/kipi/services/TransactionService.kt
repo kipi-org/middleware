@@ -180,6 +180,20 @@ class TransactionService(
         }
     }
 
+    suspend fun editTransaction(userId: Long, transactionId: Long, transactionUpdates: TransactionUpdates) {
+        val response = client.put {
+            url { path("/customer/$userId/transaction/$transactionId") }
+            contentType(Json)
+            setBody(transactionUpdates)
+        }
+
+        when (response.status.value) {
+            404 -> throw TransactionNotExistException(response.body<ErrorResponse>().message)
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
+            else -> return
+        }
+    }
+
     suspend fun getCategoriesStatistics(
         userId: Long,
         accountsIds: List<Long>,
