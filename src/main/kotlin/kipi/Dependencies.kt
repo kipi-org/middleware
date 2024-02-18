@@ -13,7 +13,7 @@ class Dependencies {
     private val transactionService = TransactionService(generateHttpClient(config.transactionServiceUrl))
     private val helperService = HelperService(generateHttpClient(config.helperServiceUrl))
 
-    val registrationController = RegistrationController(authService, customerService)
+    val registrationController = RegistrationController(authService, customerService, transactionService)
     val loginController = LoginController(authService, customerService)
     val logoutController = LogoutController(authService)
     val verifyTokenController = VerifyTokenController(authService)

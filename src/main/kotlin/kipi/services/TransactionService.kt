@@ -28,6 +28,17 @@ class TransactionService(
         }
     }
 
+    suspend fun createBaseCategories(userId: Long) {
+        val response = client.post {
+            url { path("/customer/$userId/categories/base") }
+        }
+
+        when (response.status.value) {
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
+            else -> return
+        }
+    }
+
     suspend fun findCategories(userId: Long): List<Category> {
         val response = client.get {
             url { path("/customer/$userId/categories") }
