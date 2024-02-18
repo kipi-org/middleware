@@ -12,6 +12,7 @@ import io.ktor.http.ContentType.Application.Json
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.http.HttpHeaders.ContentType
 import io.ktor.http.HttpMethod.Companion.Delete
+import io.ktor.http.HttpMethod.Companion.Put
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.InternalServerError
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -36,6 +37,7 @@ fun main() {
 fun Application.init() {
     install(CORS) {
         allowMethod(Delete)
+        allowMethod(Put)
         allowHeader(Authorization)
         allowHeader(ContentType)
         anyHost()
