@@ -4,10 +4,7 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kipi.dto.Account
-import kipi.dto.AccountDraft
-import kipi.dto.ElementCreatedResponse
-import kipi.dto.ErrorResponse
+import kipi.dto.*
 import kipi.exceptions.AccountException
 
 class AccountService(
@@ -24,6 +21,16 @@ class AccountService(
             403 -> throw AccountException(response.body<ErrorResponse>().message)
             else -> return response.body()
         }
+    }
+
+    suspend fun createForeignAccounts(userId: Long, accountDrafts: List<AccountDraft>): List<AccountRelation> {
+        val response = client.post {
+            url { path("/customer/$userId/foreign") }
+            contentType(ContentType.Application.Json)
+            setBody(accountDrafts)
+        }
+
+        return response.body()
     }
 
     suspend fun findAccounts(userId: Long): List<Account> {

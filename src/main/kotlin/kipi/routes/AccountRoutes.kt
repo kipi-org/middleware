@@ -11,10 +11,18 @@ import kipi.userId
 
 object AccountRoutes {
     fun Routing.createAccountRoutes(deps: Dependencies) = with(deps) {
-        post<AccountDraft>("/account") {
-            val accountCreatedResponse = accountCreateController.handle(call.userId, it)
+        route("/account") {
+            post<AccountDraft> {
+                val accountCreatedResponse = accountCreateController.handle(call.userId, it)
 
-            call.respond(HttpStatusCode.OK, accountCreatedResponse)
+                call.respond(HttpStatusCode.OK, accountCreatedResponse)
+            }
+
+            post<List<AccountDraft>>("/foreign") {
+                val accountsRelation = createTinkoffAccountsController.handle(call.userId, it)
+
+                call.respond(HttpStatusCode.OK, accountsRelation)
+            }
         }
 
         get("/accounts") {

@@ -1,6 +1,6 @@
 package kipi.routes
 
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -15,61 +15,61 @@ object TransactionRoutes {
         post<CategoryDraft>("/category") {
             val categoryCreatedResponse = categoryCreateController.handle(call.userId, it)
 
-            call.respond(HttpStatusCode.OK, categoryCreatedResponse)
+            call.respond(OK, categoryCreatedResponse)
         }
 
         get("/categories") {
             val categories = categoryFindController.handle(call.userId)
 
-            call.respond(HttpStatusCode.OK, categories)
+            call.respond(OK, categories)
         }
 
         delete("/category/{categoryId}") {
             categoryDeleteController.handle(call.userId, call.categoryId)
 
-            call.respond(HttpStatusCode.OK)
+            call.respond(OK)
         }
 
         post<GoalDraft>("/goal") {
             val goalCreatedResponse = goalCreateController.handle(call.userId, it)
 
-            call.respond(HttpStatusCode.OK, goalCreatedResponse)
+            call.respond(OK, goalCreatedResponse)
         }
 
         get("/goals") {
             val goals = goalFindController.handle(call.userId)
 
-            call.respond(HttpStatusCode.OK, goals)
+            call.respond(OK, goals)
         }
 
         delete("/goal/{goalId}") {
             goalDeleteController.handle(call.userId, call.goalId)
 
-            call.respond(HttpStatusCode.OK)
+            call.respond(OK)
         }
 
         post<LimitDraft>("/limit") {
             val limitCreatedResponse = limitCreateController.handle(call.userId, it)
 
-            call.respond(HttpStatusCode.OK, limitCreatedResponse)
+            call.respond(OK, limitCreatedResponse)
         }
 
         get("/limits") {
             val limits = limitFindController.handle(call.userId)
 
-            call.respond(HttpStatusCode.OK, limits)
+            call.respond(OK, limits)
         }
 
         delete("/limit/{limitId}") {
             limitDeleteController.handle(call.userId, call.limitId)
 
-            call.respond(HttpStatusCode.OK)
+            call.respond(OK)
         }
 
         post<TransactionDraft>("/account/{accountId}/transaction") {
             val transactionCreatedResponse = transactionCreateController.handle(call.userId, call.accountId, it)
 
-            call.respond(HttpStatusCode.OK, transactionCreatedResponse)
+            call.respond(OK, transactionCreatedResponse)
         }
 
         route("/transactions") {
@@ -84,14 +84,20 @@ object TransactionRoutes {
                         call.pageSize
                     )
 
-                call.respond(HttpStatusCode.OK, transactions)
+                call.respond(OK, transactions)
+            }
+
+            post<TinkoffXmlRequest>("/tinkoff") {
+                createTinkoffTransactionsController.handle(call.userId, it)
+
+                call.respond(OK)
             }
 
             get("/gaps/{gapType}") {
                 val gaps =
                     gapFetchController.handle(call.userId, call.gapType, call.accountsIds, call.page, call.pageSize)
 
-                call.respond(HttpStatusCode.OK, gaps)
+                call.respond(OK, gaps)
             }
         }
 
@@ -99,19 +105,19 @@ object TransactionRoutes {
             delete {
                 transactionDeleteController.handle(call.userId, call.transactionId)
 
-                call.respond(HttpStatusCode.OK)
+                call.respond(OK)
             }
 
             get {
                 val transaction = oneTransactionFindController.handle(call.userId, call.transactionId)
 
-                call.respond(HttpStatusCode.OK, transaction)
+                call.respond(OK, transaction)
             }
 
             put<TransactionUpdates> {
                 transactionUpdateController.handle(call.userId, call.transactionId, it)
 
-                call.respond(HttpStatusCode.OK)
+                call.respond(OK)
             }
         }
 
@@ -119,7 +125,7 @@ object TransactionRoutes {
             val statistics =
                 categoriesStatisticsController.handle(call.userId, call.accountsIds, call.from, call.to)
 
-            call.respond(HttpStatusCode.OK, statistics)
+            call.respond(OK, statistics)
         }
     }
 

@@ -210,6 +210,18 @@ class TransactionService(
         return response.body()
     }
 
+    suspend fun loadTinkoffTransactions(
+        userId: Long,
+        tinkoffXmlRequest: TinkoffXmlRequest
+    ) {
+        client.post {
+            url { path("/customer/$userId/transactions/tinkoff") }
+            contentType(Json)
+            setBody(tinkoffXmlRequest)
+        }
+    }
+
+
     private fun List<Long>.toAccountsIdsString() = this.joinToString(separator = ",")
 }
 
