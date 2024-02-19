@@ -93,6 +93,10 @@ fun Application.init() {
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
+        exception<InvalidForeignTransactionsException> { call, cause ->
+            call.respond(Forbidden, ErrorResponse(cause.message))
+        }
+
         exception<AccountException> { call, cause ->
             call.respond(Forbidden, ErrorResponse(cause.message))
         }

@@ -6,10 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
 import kipi.dto.*
-import kipi.exceptions.CategoryException
-import kipi.exceptions.GoalCreateException
-import kipi.exceptions.LimitCreateException
-import kipi.exceptions.TransactionNotExistException
+import kipi.exceptions.*
 import java.time.LocalDateTime
 
 class TransactionService(
@@ -214,10 +211,14 @@ class TransactionService(
         userId: Long,
         tinkoffXmlRequest: TinkoffXmlRequest
     ) {
-        client.post {
+        val response = client.post {
             url { path("/customer/$userId/transactions/tinkoff") }
             contentType(Json)
             setBody(tinkoffXmlRequest)
+        }
+
+        when (response.status.value) {
+            403 -> throw InvalidForeignTransactionsException(response.body<ErrorResponse>().message)
         }
     }
 
