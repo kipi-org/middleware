@@ -19,8 +19,6 @@ class HelperService(
         val response = client.post {
             url { path("/api/Chat/SendMessage") }
             timeout {
-                this.socketTimeoutMillis = 30000
-                this.connectTimeoutMillis = 30000
                 this.requestTimeoutMillis = 30000
             }
             contentType(Json)
