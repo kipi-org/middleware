@@ -8,5 +8,4 @@ class CreateTinkoffAccountsController(
 ) {
     suspend fun handle(userId: Long, foreignAccountDrafts: List<AccountDraft>) =
         accountService.createForeignAccounts(userId, foreignAccountDrafts)
-
 }

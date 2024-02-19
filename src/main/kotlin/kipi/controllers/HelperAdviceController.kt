@@ -17,7 +17,7 @@ class HelperAdviceController(
         val accountsIds = accountService.findAccounts(userId).mapNotNull { it.id }
         val now = now()
         val transactions =
-            transactionService.findTransactions(userId, accountsIds = accountsIds, from = now.minusMonths(1), to = now)
+            transactionService.findTransactions(userId, accountsIds = accountsIds, from = now.minusMonths(1), to = now, pageSize = 50)
         if (transactions.isEmpty()) throw TransactionNotExistException("transaction.last.month.none")
 
         return HelperAdvice(helperService.getHelperAdvice(userId, question.message, transactions).message)
