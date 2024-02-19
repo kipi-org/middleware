@@ -20,6 +20,8 @@ class HelperService(
             url { path("/api/Chat/SendMessage") }
             timeout {
                 this.requestTimeoutMillis = 30000
+                this.socketTimeoutMillis = 30000
+                this.connectTimeoutMillis = 30000
             }
             contentType(Json)
             header("ApiKey", "f2f572d7-ce14-4008-84d6-e2ce170d6f85")

@@ -10,6 +10,7 @@ import kipi.mappers.JsonMapper.mapper
 
 object HttpClientGeneratorUtils {
     fun generateHttpClient(host: String) = HttpClient {
+        install(HttpTimeout)
         install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.HEADERS
