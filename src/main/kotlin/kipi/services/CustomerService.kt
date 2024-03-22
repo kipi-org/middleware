@@ -7,6 +7,7 @@ import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
 import kipi.dto.Customer
 import kipi.dto.CustomerDraft
+import kipi.dto.CustomerUpdates
 import kipi.dto.ErrorResponse
 import kipi.exceptions.CustomerAlreadyExistException
 import kipi.exceptions.CustomerNotExistException
@@ -23,6 +24,14 @@ class CustomerService(
 
         when (response.status.value) {
             403 -> throw CustomerAlreadyExistException(response.body<ErrorResponse>().message)
+        }
+    }
+
+    suspend fun updateCustomer(userId: Long, customerDraft: CustomerUpdates) {
+        client.put {
+            url { path("/customer/$userId") }
+            contentType(Json)
+            setBody(customerDraft)
         }
     }
 

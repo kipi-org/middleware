@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kipi.Dependencies
+import kipi.dto.CustomerUpdates
 import kipi.userId
 
 object CustomerRoutes {
@@ -13,6 +14,11 @@ object CustomerRoutes {
             val customer = customerFindController.handle(call.userId)
 
             call.respond(HttpStatusCode.OK, customer)
+        }
+
+        put<CustomerUpdates>("/customer") {
+            customerUpdateController.handle(call.userId, it)
+            call.respond(HttpStatusCode.OK)
         }
     }
 }
