@@ -158,13 +158,19 @@ class TransactionService(
     }
 
     suspend fun findTransactionsGaps(
-        userId: Long, gapType: GapType, accountsIds: List<Long>, page: Int? = null, pageSize: Int? = null
+        userId: Long,
+        gapType: GapType,
+        accountsIds: List<Long>,
+        page: Int? = null,
+        pageSize: Int? = null,
+        categoryId: Long? = null
     ): List<TransactionGap> {
         val response = client.get {
             url { path("/customer/$userId/transactions/gaps/$gapType") }
             if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
             parameter("page", page)
             parameter("pageSize", pageSize)
+            parameter("categoryId", categoryId)
         }
 
         when (response.status.value) {
