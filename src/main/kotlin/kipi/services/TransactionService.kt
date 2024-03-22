@@ -78,6 +78,14 @@ class TransactionService(
         }
     }
 
+    suspend fun updateLimit(userId: Long, limitId: Long, limitUpdates: LimitUpdates) {
+        client.put {
+            url { path("/customer/$userId/limit/$limitId") }
+            contentType(Json)
+            setBody(limitUpdates)
+        }
+    }
+
     suspend fun createGoal(userId: Long, limitDraft: GoalDraft, accountsIds: List<Long>): ElementCreatedResponse {
         val response = client.post {
             url { path("/customer/$userId/goal") }

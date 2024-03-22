@@ -66,6 +66,12 @@ object TransactionRoutes {
             call.respond(OK)
         }
 
+        put<LimitUpdates>("/limit/{limitId}") {
+            updateLimitController.handle(call.userId, call.limitId, it)
+
+            call.respond(OK)
+        }
+
         post<TransactionDraft>("/account/{accountId}/transaction") {
             val transactionCreatedResponse = transactionCreateController.handle(call.userId, call.accountId, it)
 
