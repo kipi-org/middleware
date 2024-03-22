@@ -62,6 +62,12 @@ class AuthService(
         }
     }
 
+    suspend fun deleteUserInfo(userId: Long) = client.delete {
+        url {
+            path("/user/$userId")
+        }
+    }
+
     suspend fun verify(token: String): SessionResponse {
         val response = client.get {
             url {

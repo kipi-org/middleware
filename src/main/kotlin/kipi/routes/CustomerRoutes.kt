@@ -10,10 +10,18 @@ import kipi.userId
 
 object CustomerRoutes {
     fun Routing.createCustomerRoutes(deps: Dependencies) = with(deps) {
-        get("/customer") {
-            val customer = customerFindController.handle(call.userId)
+        route("/customer") {
+            get {
+                val customer = customerFindController.handle(call.userId)
 
-            call.respond(HttpStatusCode.OK, customer)
+                call.respond(HttpStatusCode.OK, customer)
+            }
+
+            delete {
+                deleteUserController.handle(call.userId)
+
+                call.respond(HttpStatusCode.OK)
+            }
         }
 
         put<CustomerUpdates>("/customer") {

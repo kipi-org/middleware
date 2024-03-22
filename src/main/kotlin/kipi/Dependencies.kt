@@ -45,4 +45,5 @@ class Dependencies {
     val createTinkoffTransactionsController = CreateTinkoffTransactionsController(transactionService)
     val createTinkoffAccountsController = CreateTinkoffAccountsController(accountService)
     val customerUpdateController = CustomerUpdateController(customerService)
+    val deleteUserController = DeleteUserController(accountService, authService, customerService, transactionService)
 }

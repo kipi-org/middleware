@@ -35,6 +35,12 @@ class CustomerService(
         }
     }
 
+    suspend fun deleteCustomer(userId: Long) {
+        client.delete {
+            url { path("/customer/$userId") }
+        }
+    }
+
     suspend fun findCustomer(userId: Long): Customer {
         val response = client.get {
             url {

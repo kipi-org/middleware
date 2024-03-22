@@ -177,6 +177,15 @@ class TransactionService(
         }
     }
 
+    suspend fun deleteUserInfo(userId: Long, accountsIds: List<Long>) {
+        client.delete {
+            url {
+                path("/customer/$userId")
+                parameter("accountsIds", accountsIds.toAccountsIdsString())
+            }
+        }
+    }
+
     suspend fun editTransaction(userId: Long, transactionId: Long, transactionUpdates: TransactionUpdates) {
         val response = client.put {
             url { path("/customer/$userId/transaction/$transactionId") }

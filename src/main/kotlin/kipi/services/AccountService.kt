@@ -46,4 +46,10 @@ class AccountService(
             url { path("/customer/$userId/account/$accountId") }
         }
     }
+
+    suspend fun deleteAllUserAccounts(userId: Long) {
+        client.delete {
+            url { path("/customer/$userId") }
+        }
+    }
 }
