@@ -22,11 +22,11 @@ object CustomerRoutes {
 
                 call.respond(HttpStatusCode.OK)
             }
-        }
 
-        put<CustomerUpdates>("/customer") {
-            customerUpdateController.handle(call.userId, it)
-            call.respond(HttpStatusCode.OK)
+            put<CustomerUpdates> {
+                customerUpdateController.handle(call.userId, it)
+                call.respond(HttpStatusCode.OK)
+            }
         }
     }
 }

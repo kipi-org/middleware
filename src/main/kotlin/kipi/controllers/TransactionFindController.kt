@@ -12,6 +12,7 @@ class TransactionFindController(
     suspend fun handle(
         userId: Long,
         accountsIds: List<Long>,
+        categoryId: Long?,
         from: LocalDateTime? = null,
         to: LocalDateTime? = null,
         page: Int,
@@ -20,6 +21,6 @@ class TransactionFindController(
         val ids = accountService.findAccounts(userId).mapNotNull { it.id }
         val existIds = accountsIds.intersect(ids.toSet()).ifEmpty { ids }
 
-        return transactionService.findTransactions(userId, existIds.toMutableList(), from, to, page, pageSize)
+        return transactionService.findTransactions(userId, existIds.toMutableList(), from, to, page, pageSize, categoryId)
     }
 }

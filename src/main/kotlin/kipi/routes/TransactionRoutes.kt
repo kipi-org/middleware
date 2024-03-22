@@ -25,7 +25,7 @@ object TransactionRoutes {
         }
 
         delete("/category/{categoryId}") {
-            categoryDeleteController.handle(call.userId, call.categoryId)
+            categoryDeleteController.handle(call.userId, call.categoryId!!)
 
             call.respond(OK)
         }
@@ -78,6 +78,7 @@ object TransactionRoutes {
                     transactionFindController.handle(
                         call.userId,
                         call.accountsIds,
+                        call.categoryId,
                         call.from,
                         call.to,
                         call.page,
@@ -132,8 +133,8 @@ object TransactionRoutes {
     private val ApplicationCall.accountId: Long
         get() = this.parameters.getOrFail("accountId").toLong()
 
-    private val ApplicationCall.categoryId: Long
-        get() = this.parameters.getOrFail("categoryId").toLong()
+    private val ApplicationCall.categoryId: Long?
+        get() = this.parameters["categoryId"]?.toLong()
 
     private val ApplicationCall.limitId: Long
         get() = this.parameters.getOrFail("limitId").toLong()

@@ -127,11 +127,13 @@ class TransactionService(
         from: LocalDateTime? = null,
         to: LocalDateTime? = null,
         page: Int? = null,
-        pageSize: Int? = null
-    ): List<Transaction> {
+        pageSize: Int? = null,
+        categoryId: Long? = null
+        ): List<Transaction> {
         val response = client.get {
             url { path("/customer/$userId/transactions") }
             if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
+            parameter("categoryId", categoryId)
             parameter("page", page)
             parameter("pageSize", pageSize)
             parameter("from", from)
