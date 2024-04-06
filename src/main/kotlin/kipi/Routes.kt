@@ -15,7 +15,7 @@ import kipi.routes.TransactionRoutes.createTransactionRoutes
 private val userIdKey = AttributeKey<Long>("userId")
 
 fun Application.routes(deps: Dependencies) {
-    val nonAuthEndpoints = listOf("/registration", "/login", "/revoke")
+    val nonAuthEndpoints = listOf("/registration", "/login", "/revoke", "/recover", "/recover/confirm")
 
     val authFilter = createApplicationPlugin("authFilter") {
         onCall { call ->

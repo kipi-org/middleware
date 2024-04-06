@@ -102,7 +102,14 @@ object TransactionRoutes {
 
             get("/gaps/{gapType}") {
                 val gaps =
-                    gapFetchController.handle(call.userId, call.gapType, call.accountsIds, call.page, call.pageSize, call.categoryId)
+                    gapFetchController.handle(
+                        call.userId,
+                        call.gapType,
+                        call.accountsIds,
+                        call.page,
+                        call.pageSize,
+                        call.categoryId
+                    )
 
                 call.respond(OK, gaps)
             }

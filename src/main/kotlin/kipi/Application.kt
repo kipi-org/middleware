@@ -101,6 +101,10 @@ fun Application.init() {
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
+        exception<RecoverPasswordException> { call, cause ->
+            call.respond(Forbidden, ErrorResponse(cause.message))
+        }
+
         exception<TransactionNotExistException> { call, cause ->
             call.respond(NotFound, ErrorResponse(cause.message))
         }

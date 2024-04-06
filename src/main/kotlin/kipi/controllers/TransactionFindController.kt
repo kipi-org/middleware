@@ -21,6 +21,14 @@ class TransactionFindController(
         val ids = accountService.findAccounts(userId).mapNotNull { it.id }
         val existIds = accountsIds.intersect(ids.toSet()).ifEmpty { ids }
 
-        return transactionService.findTransactions(userId, existIds.toMutableList(), from, to, page, pageSize, categoryId)
+        return transactionService.findTransactions(
+            userId,
+            existIds.toMutableList(),
+            from,
+            to,
+            page,
+            pageSize,
+            categoryId
+        )
     }
 }

@@ -5,7 +5,7 @@ import kipi.services.*
 import kipi.utils.HttpClientGeneratorUtils.generateHttpClient
 
 class Dependencies {
-    val config = Config()
+    private val config = Config()
 
     private val authService = AuthService(generateHttpClient(config.authServiceUrl))
     private val customerService = CustomerService(generateHttpClient(config.customerServiceUrl))
@@ -18,6 +18,10 @@ class Dependencies {
     val logoutController = LogoutController(authService)
     val verifyTokenController = VerifyTokenController(authService)
     val revokeTokenController = RevokeTokenController(authService)
+    val recoverPasswordController = RecoverPasswordController(authService, customerService)
+    val recoverPasswordConfirmController = RecoverPasswordConfirmController(authService, customerService)
+    val changePasswordController = ChangePasswordController(authService, customerService)
+    val changePasswordConfirmController = ChangePasswordConfirmController(authService, customerService)
 
     val customerFindController = CustomerFindController(customerService)
 

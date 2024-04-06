@@ -4,11 +4,10 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kipi.dto.Credentials
-import kipi.dto.ErrorResponse
-import kipi.dto.IdCredentials
-import kipi.dto.SessionResponse
+import io.ktor.http.ContentType.Application.Json
+import kipi.dto.*
 import kipi.exceptions.AuthException
+import kipi.exceptions.RecoverPasswordException
 import kipi.exceptions.SessionException
 import kipi.exceptions.ValidationException
 
@@ -18,7 +17,7 @@ class AuthService(
     suspend fun registration(credentials: Credentials): SessionResponse {
         val response = client.post {
             url { path("/registration") }
-            contentType(ContentType.Application.Json)
+            contentType(Json)
             setBody(credentials)
         }
 
@@ -32,7 +31,7 @@ class AuthService(
     suspend fun login(credentials: Credentials): SessionResponse {
         val response = client.post {
             url { path("/login") }
-            contentType(ContentType.Application.Json)
+            contentType(Json)
             setBody(credentials)
         }
 
@@ -45,7 +44,7 @@ class AuthService(
     suspend fun loginById(credentials: IdCredentials): SessionResponse {
         val response = client.post {
             url { path("/loginById") }
-            contentType(ContentType.Application.Json)
+            contentType(Json)
             setBody(credentials)
         }
 
@@ -94,6 +93,30 @@ class AuthService(
         when (response.status.value) {
             401 -> throw SessionException(response.body<ErrorResponse>().message)
             else -> return response.body()
+        }
+    }
+
+    suspend fun recover(recoverRequestDto: RecoverRequestDto) {
+        client.post {
+            url {
+                path("/recover")
+                contentType(Json)
+                setBody(recoverRequestDto)
+            }
+        }
+    }
+
+    suspend fun recoverConfirm(recoverConfirmRequestDto: RecoverConfirmRequestDto) {
+        val response = client.post {
+            url {
+                path("/recover/confirm")
+                contentType(Json)
+                setBody(recoverConfirmRequestDto)
+            }
+        }
+
+        when (response.status.value) {
+            403 -> throw RecoverPasswordException(response.body<ErrorResponse>().message)
         }
     }
 }
