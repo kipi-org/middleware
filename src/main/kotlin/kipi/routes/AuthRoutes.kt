@@ -42,7 +42,7 @@ object AuthRoutes {
                 call.respond(OK)
             }
 
-            post<RecoverConfirmRequest> {
+            post<RecoverConfirmRequest>("/confirm") {
                 recoverPasswordConfirmController.handle(it)
 
                 call.respond(OK)
