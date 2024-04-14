@@ -16,7 +16,7 @@ class RegistrationController(
     private val transactionService: TransactionService
 ) {
     suspend fun handle(request: RegistrationRequest): SessionResponse {
-        val sessionResponse = authService.registration(Credentials(request.username ?: request.email, request.password, request.email))
+        val sessionResponse = authService.registration(Credentials(request.username ?: request.email, request.password))
         customerService.createCustomer(
             sessionResponse.userId,
             CustomerDraft(request.name, request.surname, request.email)

@@ -29,6 +29,12 @@ object AuthRoutes {
             call.respond(OK)
         }
 
+        post("/email") {
+            emailController.handle(call.userId)
+
+            call.respond(OK)
+        }
+
         post<OtpConfirmRequest>("/email/confirm") {
             emailConfirmController.handle(call.userId, it)
 

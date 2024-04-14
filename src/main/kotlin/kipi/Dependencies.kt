@@ -52,5 +52,6 @@ class Dependencies {
     val deleteUserController = DeleteUserController(accountService, authService, customerService, transactionService)
     val updateLimitController = UpdateLimitController(transactionService)
     val helperMessagesController = HelperMessagesController(helperService)
+    val emailController = EmailController(authService, customerService)
     val emailConfirmController = EmailConfirmController(authService)
 }

@@ -120,6 +120,25 @@ class AuthService(
         }
     }
 
+    suspend fun emailSendConfirmMessage(userId: Long, email: String) {
+        val response = client.post {
+            url {
+                path("/email")
+                contentType(Json)
+                setBody(
+                    EmailRequest(
+                        userId, email
+                    )
+                )
+            }
+        }
+
+        when (response.status.value) {
+            403 -> throw AuthException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
+
     suspend fun emailConfirm(userId: Long, otpConfirmRequest: OtpConfirmRequest) {
         val response = client.post {
             url {
