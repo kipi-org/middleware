@@ -1,6 +1,6 @@
 package kipi.routes
 
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode.Companion.OK
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -13,7 +13,13 @@ object HelperRoutes {
         post<UserQuestion>("/ask/question") {
             val helperAnswer = helperAdviceController.handle(call.userId, it)
 
-            call.respond(HttpStatusCode.OK, helperAnswer)
+            call.respond(OK, helperAnswer)
+        }
+
+        get("/messages") {
+            val messages = helperMessagesController.handle(call.userId)
+
+            call.respond(OK, messages)
         }
     }
 }
