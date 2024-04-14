@@ -29,6 +29,12 @@ object AuthRoutes {
             call.respond(OK)
         }
 
+        post<OtpConfirmRequest>("/email/confirm") {
+            emailConfirmController.handle(call.userId, it)
+
+            call.respond(OK)
+        }
+
         post("/revoke") {
             val sessionResponse = revokeTokenController.handle(call.request.header("Authorization")!!)
 

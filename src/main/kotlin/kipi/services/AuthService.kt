@@ -119,4 +119,23 @@ class AuthService(
             403 -> throw RecoverPasswordException(response.body<ErrorResponse>().message)
         }
     }
+
+    suspend fun emailConfirm(userId: Long, otpConfirmRequest: OtpConfirmRequest) {
+        val response = client.post {
+            url {
+                path("/email/confirm")
+                contentType(Json)
+                setBody(
+                    EmailConfirmRequest(
+                        userId, otpConfirmRequest.code
+                    )
+                )
+            }
+        }
+
+        when (response.status.value) {
+            403 -> throw AuthException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
 }
