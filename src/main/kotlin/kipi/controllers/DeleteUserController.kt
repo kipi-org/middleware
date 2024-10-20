@@ -1,15 +1,13 @@
 package kipi.controllers
 
-import kipi.services.AccountService
-import kipi.services.AuthService
-import kipi.services.CustomerService
-import kipi.services.TransactionService
+import kipi.services.*
 
 class DeleteUserController(
     private val accountService: AccountService,
     private val authService: AuthService,
     private val customerService: CustomerService,
-    private val transactionService: TransactionService
+    private val transactionService: TransactionService,
+    private val goalService: GoalService,
 ) {
     suspend fun handle(userId: Long) {
         authService.deleteUserInfo(userId)
@@ -17,6 +15,7 @@ class DeleteUserController(
         val accountsIds = accountService.findAccounts(userId).mapNotNull { it.id }
         if (accountsIds.isNotEmpty()) {
             transactionService.deleteUserInfo(userId, accountsIds)
+            goalService.deleteAllUserGoals(accountsIds)
             accountService.deleteAllUserAccounts(userId)
         }
     }

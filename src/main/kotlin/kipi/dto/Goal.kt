@@ -7,5 +7,9 @@ data class Goal(
     val id: Long,
     val amount: BigDecimal,
     val currentAmount: BigDecimal,
-    val category: Category
+    val name: String,
+    val account: Account,
+    val iconUrl: String,
+    val colorCode: String,
+    val priority: Long? = null,
 ) : Serializable

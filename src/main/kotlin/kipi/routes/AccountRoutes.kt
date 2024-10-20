@@ -11,7 +11,13 @@ import kipi.userId
 
 object AccountRoutes {
     fun Routing.createAccountRoutes(deps: Dependencies) = with(deps) {
-        route("/account") {
+        route("/accounts") {
+            get {
+                val accounts = accountFindController.handle(call.userId)
+
+                call.respond(HttpStatusCode.OK, accounts)
+            }
+
             post<AccountDraft> {
                 val accountCreatedResponse = accountCreateController.handle(call.userId, it)
 
@@ -23,18 +29,20 @@ object AccountRoutes {
 
                 call.respond(HttpStatusCode.OK, accountsRelation)
             }
-        }
 
-        get("/accounts") {
-            val accounts = accountFindController.handle(call.userId)
+            route("/{accountId}") {
+                get("/goals") {
+                    val goals = goalFindController.handleByAccount(call.userId, call.accountId)
 
-            call.respond(HttpStatusCode.OK, accounts)
-        }
+                    call.respond(HttpStatusCode.OK, goals)
+                }
 
-        delete("/account/{accountId}") {
-            accountDeleteController.handle(call.userId, call.accountId)
+                delete {
+                    accountDeleteController.handle(call.userId, call.accountId)
 
-            call.respond(HttpStatusCode.OK)
+                    call.respond(HttpStatusCode.OK)
+                }
+            }
         }
     }
 

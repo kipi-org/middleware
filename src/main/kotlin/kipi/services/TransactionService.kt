@@ -86,34 +86,6 @@ class TransactionService(
         }
     }
 
-    suspend fun createGoal(userId: Long, limitDraft: GoalDraft, accountsIds: List<Long>): ElementCreatedResponse {
-        val response = client.post {
-            url { path("/customer/$userId/goal") }
-            contentType(Json)
-            setBody(limitDraft)
-            if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
-        }
-
-        when (response.status.value) {
-            403 -> throw GoalCreateException(response.body<ErrorResponse>().message)
-            else -> return response.body()
-        }
-    }
-
-    suspend fun findGoals(userId: Long): List<Goal> {
-        val response = client.get {
-            url { path("/customer/$userId/goals") }
-        }
-
-        return response.body()
-    }
-
-    suspend fun deleteGoal(userId: Long, goalId: Long) {
-        client.delete {
-            url { path("/customer/$userId/goal/$goalId") }
-        }
-    }
-
     suspend fun createTransaction(
         userId: Long, accountId: Long, transactionDraft: TransactionDraft
     ): ElementCreatedResponse {

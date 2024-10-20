@@ -9,6 +9,7 @@ import io.ktor.util.*
 import kipi.routes.AccountRoutes.createAccountRoutes
 import kipi.routes.AuthRoutes.createAuthRoutes
 import kipi.routes.CustomerRoutes.createCustomerRoutes
+import kipi.routes.GoalRoutes.createGoalRoutes
 import kipi.routes.HelperRoutes.createHelperRoutes
 import kipi.routes.TransactionRoutes.createTransactionRoutes
 
@@ -39,6 +40,7 @@ fun Application.routes(deps: Dependencies) {
         createCustomerRoutes(deps)
         createAccountRoutes(deps)
         createTransactionRoutes(deps)
+        createGoalRoutes(deps)
         createHelperRoutes(deps)
     }
 }

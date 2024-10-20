@@ -41,6 +41,10 @@ class AccountService(
         return response.body()
     }
 
+    suspend fun findAccount(userId: Long, accountId: Long): Account {
+        return findAccounts(userId).first { account -> account.id == accountId }
+    }
+
     suspend fun deleteAccount(userId: Long, accountId: Long) {
         client.delete {
             url { path("/customer/$userId/account/$accountId") }

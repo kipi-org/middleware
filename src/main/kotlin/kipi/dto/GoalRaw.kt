@@ -3,7 +3,8 @@ package kipi.dto
 import java.io.Serializable
 import java.math.BigDecimal
 
-data class GoalDraft(
+class GoalRaw (
+    val id: Long,
     val amount: BigDecimal,
     val name: String,
     val accountId: Long,
