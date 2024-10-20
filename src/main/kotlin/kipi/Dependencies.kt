@@ -1,6 +1,9 @@
 package kipi
 
 import kipi.controllers.*
+import kipi.controllers.goal.GoalCreateController
+import kipi.controllers.goal.GoalDeleteController
+import kipi.controllers.goal.GoalFindController
 import kipi.services.*
 import kipi.utils.HttpClientGeneratorUtils.generateHttpClient
 
@@ -11,6 +14,7 @@ class Dependencies {
     private val customerService = CustomerService(generateHttpClient(config.customerServiceUrl))
     private val accountService = AccountService(generateHttpClient(config.accountServiceUrl))
     private val transactionService = TransactionService(generateHttpClient(config.transactionServiceUrl))
+    private val goalService = GoalService(generateHttpClient(config.goalServiceUrl), accountService)
     private val helperService = HelperService(generateHttpClient(config.helperServiceUrl))
 
     val registrationController = RegistrationController(authService, customerService, transactionService)
@@ -35,9 +39,9 @@ class Dependencies {
     val limitCreateController = LimitCreateController(transactionService, accountService)
     val limitFindController = LimitFindController(transactionService)
     val limitDeleteController = LimitDeleteController(transactionService)
-    val goalCreateController = GoalCreateController(transactionService, accountService)
-    val goalFindController = GoalFindController(transactionService)
-    val goalDeleteController = GoalDeleteController(transactionService)
+    val goalCreateController = GoalCreateController(goalService)
+    val goalFindController = GoalFindController(goalService)
+    val goalDeleteController = GoalDeleteController(goalService)
     val transactionCreateController = TransactionCreateController(transactionService, accountService)
     val transactionFindController = TransactionFindController(transactionService, accountService)
     val transactionDeleteController = TransactionDeleteController(transactionService)
@@ -49,7 +53,7 @@ class Dependencies {
     val createTinkoffTransactionsController = CreateTinkoffTransactionsController(transactionService)
     val createTinkoffAccountsController = CreateTinkoffAccountsController(accountService)
     val customerUpdateController = CustomerUpdateController(customerService)
-    val deleteUserController = DeleteUserController(accountService, authService, customerService, transactionService)
+    val deleteUserController = DeleteUserController(accountService, authService, customerService, transactionService, goalService)
     val updateLimitController = UpdateLimitController(transactionService)
     val helperMessagesController = HelperMessagesController(helperService)
     val emailController = EmailController(authService, customerService)

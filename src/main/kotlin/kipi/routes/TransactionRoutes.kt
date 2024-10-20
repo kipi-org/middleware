@@ -30,24 +30,6 @@ object TransactionRoutes {
             call.respond(OK)
         }
 
-        post<GoalDraft>("/goal") {
-            val goalCreatedResponse = goalCreateController.handle(call.userId, it)
-
-            call.respond(OK, goalCreatedResponse)
-        }
-
-        get("/goals") {
-            val goals = goalFindController.handle(call.userId)
-
-            call.respond(OK, goals)
-        }
-
-        delete("/goal/{goalId}") {
-            goalDeleteController.handle(call.userId, call.goalId)
-
-            call.respond(OK)
-        }
-
         post<LimitDraft>("/limit") {
             val limitCreatedResponse = limitCreateController.handle(call.userId, it)
 
@@ -151,9 +133,6 @@ object TransactionRoutes {
 
     private val ApplicationCall.limitId: Long
         get() = this.parameters.getOrFail("limitId").toLong()
-
-    private val ApplicationCall.goalId: Long
-        get() = this.parameters.getOrFail("goalId").toLong()
 
     private val ApplicationCall.transactionId: Long
         get() = this.parameters.getOrFail("transactionId").toLong()
