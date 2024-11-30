@@ -11,7 +11,7 @@ group = "kipi"
 version = "0.0.1"
 
 application {
-    mainClass.set("kipi.ApplicationKt")
+    mainClass.set("ApplicationKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
@@ -40,4 +40,15 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+}
+
+sourceSets {
+    main {
+        java.srcDir("src")
+        resources.srcDir("resources")
+    }
+    test {
+        java.srcDir("test")
+        resources.srcDir("test")
+    }
 }

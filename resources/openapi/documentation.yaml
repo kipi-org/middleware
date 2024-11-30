@@ -1,0 +1,955 @@
+openapi: "3.1.0"
+info:
+  title: "middleware API"
+  description: "middleware API"
+  version: "1.0.0"
+servers:
+- url: "https://middleware"
+paths:
+  /account:
+    post:
+      tags:
+        - Account
+      description: "Создать счёт"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AccountDraft"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElementCreatedResponse"
+  /account/{accountId}:
+    delete:
+      tags:
+        - Account
+      description: "Удалить счёт"
+      parameters:
+      - name: "accountId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+  /account/{accountId}/transaction:
+    post:
+      tags:
+        - Transaction
+      description: "Добавить транзакцию"
+      parameters:
+      - name: "accountId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionDraft"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElementCreatedResponse"
+  /account/foreign:
+    post:
+      tags:
+        - Account
+      description: "Добавить внешний счёт"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/AccountDraft"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/AccountRelation"
+  /accounts:
+    get:
+      tags:
+        - Account
+      description: "Список счетов"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FullAccount"
+  /categories:
+    get:
+      tags:
+        - Category
+      description: "Получить список категорий"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Category"
+  /categories/statistics:
+    get:
+      tags:
+        - Category
+      description: "Получить статистику о категориях"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/CategoryStatistics"
+  /category:
+    post:
+      tags:
+        - Category
+      description: "Создать категорию"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryDraft"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElementCreatedResponse"
+  /category/{categoryId}:
+    delete:
+      tags:
+        - Category
+      description: "Удалить категорию"
+      parameters:
+      - name: "categoryId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+  /customer:
+    delete:
+      tags:
+        - Customer
+      description: "Удалить информацию о пользователе"
+      responses:
+        "200":
+          description: "OK"
+    get:
+      tags:
+        - Customer
+      description: "Информация о пользователе"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+    put:
+      tags:
+        - Customer
+      description: "Обновить информацию о пользователе"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerUpdates"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /email:
+    post:
+      tags:
+        - Customer
+      description: "Подтвердить почту"
+      responses:
+        "200":
+          description: "Смс отправлена на почту"
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /email/confirm:
+    post:
+      tags:
+        - Customer
+      description: "Подтвердить почту"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OtpConfirmRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /goal:
+    tags:
+      - Goal
+    post:
+      description: "Создать цель"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GoalDraft"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElementCreatedResponse"
+  /goal/{goalId}:
+    delete:
+      tags:
+        - Goal
+      description: "Удалить цель"
+      parameters:
+      - name: "goalId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+  /goals:
+    get:
+      tags:
+        - Goal
+      description: "Получить список целей"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Goal"
+  /limit:
+    post:
+      tags:
+        - Limit
+      description: "Создать лимит на категорию"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LimitDraft"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ElementCreatedResponse"
+  /limit/{limitId}:
+    delete:
+      tags:
+        - Limit
+      description: "Удалить лимит"
+      parameters:
+      - name: "limitId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+    put:
+      tags:
+        - Limit
+      description: "Изменить лимит"
+      parameters:
+      - name: "limitId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LimitUpdates"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /limits:
+    get:
+      tags:
+        - Limit
+      description: "Получить список лимитов пользователя"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Limit"
+  /login:
+    post:
+      tags:
+        - Auth
+      description: "Логин"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Credentials"
+        required: true
+      responses:
+        "200":
+          description: "Токены"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+  /logout:
+    post:
+      tags:
+        - Auth
+      description: "Логаут"
+      responses:
+        "200":
+          description: "OK"
+  /password:
+    put:
+      tags:
+        - Auth
+      description: "Смена пароля"
+      responses:
+        "200":
+          description: "OK"
+  /password/confirm:
+    post:
+      tags:
+        - Auth
+      description: "Подтвердить смену пароля"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordConfirmRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /recover:
+    post:
+      tags:
+        - Auth
+      description: "Восстановить пароль"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecoverRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /recover/confirm:
+    post:
+      tags:
+        - Auth
+      description: "Подтвердить восстановление пароля"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecoverConfirmRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+  /registration:
+    post:
+      tags:
+        - Auth
+      description: "Регистрация"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegistrationRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+  /revoke:
+    post:
+      tags:
+        - Auth
+      description: "Обновить токен"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionResponse"
+  /transaction/{transactionId}:
+    delete:
+      tags:
+        - Transaction
+      description: "Удалить транзакцию"
+      parameters:
+      - name: "transactionId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+    get:
+      tags:
+        - Transaction
+      description: "Получить транзакцию"
+      parameters:
+      - name: "transactionId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+    put:
+      tags:
+        - Transaction
+      description: "Сменить категорию транзакции"
+      parameters:
+      - name: "transactionId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionUpdates"
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+  /transactions:
+    get:
+      tags:
+        - Transaction
+      description: "Получить список транзакций"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Transaction"
+  /transactions/gaps/{gapType}:
+    get:
+      tags:
+        - Transaction
+      description: "Получить промежутки трат"
+      parameters:
+      - name: "gapType"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/TransactionGap"
+  /transactions/tinkoff:
+    post:
+      tags:
+        - Transaction
+      description: "Загрузить выписку из Тинькофф"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TinkoffXmlRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+components:
+  schemas:
+    ErrorResponse:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+      required:
+      - "message"
+    ValidationError:
+      type: "object"
+      properties:
+        field:
+          type: "string"
+        message:
+          type: "string"
+      required:
+      - "field"
+    AccountDraft:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+          - "MAIN"
+          - "CURRENCY"
+          - "TINKOFF"
+          - "ALPHA"
+          - "SBER"
+        colorCode:
+          type: "string"
+        foreignAccountId:
+          type: "string"
+      required:
+      - "type"
+      - "colorCode"
+    ElementCreatedResponse:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+    BigDecimal:
+      type: "object"
+      properties: {}
+    TransactionDraft:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+          - "BASE"
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        date:
+          type: "string"
+          format: "date-time"
+        categoryId:
+          type: "integer"
+          format: "int64"
+        description:
+          type: "string"
+      required:
+      - "type"
+      - "amount"
+    AccountRelation:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        foreignId:
+          type: "string"
+        type:
+          type: "string"
+          enum:
+          - "MAIN"
+          - "CURRENCY"
+          - "TINKOFF"
+          - "ALPHA"
+          - "SBER"
+      required:
+      - "foreignId"
+      - "type"
+    Category:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        iconUrl:
+          type: "string"
+        colorCode:
+          type: "string"
+      required:
+      - "name"
+      - "iconUrl"
+      - "colorCode"
+    Transaction:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        accountId:
+          type: "integer"
+          format: "int64"
+        type:
+          type: "string"
+          enum:
+          - "BASE"
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        date:
+          type: "string"
+          format: "date-time"
+        category:
+          $ref: "#/components/schemas/Category"
+        description:
+          type: "string"
+      required:
+      - "type"
+      - "amount"
+      - "date"
+      - "category"
+    FullAccount:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        userId:
+          type: "integer"
+          format: "int64"
+        balance:
+          $ref: "#/components/schemas/BigDecimal"
+        type:
+          type: "string"
+          enum:
+          - "MAIN"
+          - "CURRENCY"
+          - "TINKOFF"
+          - "ALPHA"
+          - "SBER"
+        colorCode:
+          type: "string"
+        foreignAccountId:
+          type: "string"
+        transactions:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Transaction"
+      required:
+      - "balance"
+      - "type"
+      - "colorCode"
+      - "transactions"
+    CategoryStatistics:
+      type: "object"
+      properties:
+        category:
+          $ref: "#/components/schemas/Category"
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        type:
+          type: "string"
+          enum:
+          - "INCOME"
+          - "OUTCOME"
+      required:
+      - "category"
+      - "amount"
+      - "type"
+    CategoryDraft:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        iconUrl:
+          type: "string"
+        colorCode:
+          type: "string"
+      required:
+      - "name"
+      - "iconUrl"
+      - "colorCode"
+    Customer:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        surname:
+          type: "string"
+        email:
+          type: "string"
+        dateOfCreate:
+          type: "string"
+          format: "date-time"
+      required:
+      - "name"
+      - "surname"
+      - "email"
+      - "dateOfCreate"
+    CustomerUpdates:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        surname:
+          type: "string"
+    OtpConfirmRequest:
+      type: "object"
+      properties:
+        code:
+          type: "string"
+      required:
+      - "code"
+    GoalDraft:
+      type: "object"
+      properties:
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        currentAmount:
+          $ref: "#/components/schemas/BigDecimal"
+        categoryId:
+          type: "integer"
+          format: "int64"
+      required:
+      - "amount"
+      - "currentAmount"
+    Goal:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        currentAmount:
+          $ref: "#/components/schemas/BigDecimal"
+        category:
+          $ref: "#/components/schemas/Category"
+      required:
+      - "amount"
+      - "currentAmount"
+      - "category"
+    LimitDraft:
+      type: "object"
+      properties:
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        currentAmount:
+          $ref: "#/components/schemas/BigDecimal"
+        categoryId:
+          type: "integer"
+          format: "int64"
+      required:
+      - "amount"
+      - "currentAmount"
+    LimitUpdates:
+      type: "object"
+      properties:
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+      required:
+      - "amount"
+    Limit:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        amount:
+          $ref: "#/components/schemas/BigDecimal"
+        currentAmount:
+          $ref: "#/components/schemas/BigDecimal"
+        category:
+          $ref: "#/components/schemas/Category"
+      required:
+      - "amount"
+      - "currentAmount"
+      - "category"
+    Credentials:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+      required:
+      - "username"
+      - "password"
+    SessionResponse:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int64"
+        refreshToken:
+          type: "string"
+        accessToken:
+          type: "string"
+      required:
+      - "accessToken"
+    ChangePasswordConfirmRequest:
+      type: "object"
+      properties:
+        code:
+          type: "string"
+        newPassword:
+          type: "string"
+      required:
+      - "code"
+      - "newPassword"
+    RecoverRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+      required:
+      - "email"
+    RecoverConfirmRequest:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        code:
+          type: "string"
+        newPassword:
+          type: "string"
+      required:
+      - "email"
+      - "code"
+      - "newPassword"
+    RegistrationRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        name:
+          type: "string"
+        surname:
+          type: "string"
+      required:
+      - "email"
+      - "password"
+      - "name"
+      - "surname"
+    TransactionUpdates:
+      type: "object"
+      properties:
+        categoryId:
+          type: "integer"
+          format: "int64"
+        description:
+          type: "string"
+    Period:
+      type: "object"
+      properties:
+        from:
+          type: "string"
+          format: "date-time"
+        to:
+          type: "string"
+          format: "date-time"
+      required:
+      - "from"
+      - "to"
+    Statement:
+      type: "object"
+      properties:
+        income:
+          $ref: "#/components/schemas/BigDecimal"
+        outcome:
+          $ref: "#/components/schemas/BigDecimal"
+      required:
+      - "income"
+      - "outcome"
+    TransactionGap:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          enum:
+          - "YEAR"
+          - "MONTH"
+          - "WEEK"
+          - "DAY"
+        period:
+          $ref: "#/components/schemas/Period"
+        statement:
+          $ref: "#/components/schemas/Statement"
+      required:
+      - "type"
+      - "period"
+      - "statement"
+    TinkoffXmlRequest:
+      type: "object"
+      properties:
+        accountId:
+          type: "integer"
+          format: "int64"
+        transactionsXml:
+          type: "string"
+      required:
+      - "transactionsXml"
