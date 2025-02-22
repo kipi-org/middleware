@@ -59,7 +59,7 @@ fun Application.init() {
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
-        exception<exceptions.SessionException> { call, cause ->
+        exception<SessionException> { call, cause ->
             call.respond(Unauthorized, ErrorResponse(cause.message))
         }
 
@@ -75,7 +75,7 @@ fun Application.init() {
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
-        exception<exceptions.CategoryException> { call, cause ->
+        exception<CategoryException> { call, cause ->
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
@@ -83,7 +83,7 @@ fun Application.init() {
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 
-        exception<exceptions.LimitCreateException> { call, cause ->
+        exception<LimitCreateException> { call, cause ->
             call.respond(Forbidden, ErrorResponse(cause.message))
         }
 

@@ -17,12 +17,6 @@ object AccountRoutes {
 
                 call.respond(HttpStatusCode.OK, accountCreatedResponse)
             }
-
-            post<List<AccountDraft>>("/foreign") {
-                val accountsRelation = createTinkoffAccountsController.handle(call.userId, it)
-
-                call.respond(HttpStatusCode.OK, accountsRelation)
-            }
         }
 
         get("/accounts") {

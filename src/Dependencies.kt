@@ -1,16 +1,24 @@
 import controllers.*
+import domain.clients.ai.AIServiceClient
+import domain.clients.parser.ParseServiceClient
 import domain.services.*
 import utils.HttpClientGeneratorUtils.generateHttpClient
 
 class Dependencies {
     private val config = Config()
 
-    private val authService = AuthService(generateHttpClient(config.authServiceUrl))
-    private val customerService = CustomerService(generateHttpClient(config.customerServiceUrl))
-    private val accountService = AccountService(generateHttpClient(config.accountServiceUrl))
+    private val aiServiceClient = AIServiceClient(generateHttpClient(config.aiServiceConfig))
+    private val parseServiceClient = ParseServiceClient(generateHttpClient(config.parserServiceConfig))
+
+    private val authService = AuthService(generateHttpClient(config.authServiceConfig))
+    private val customerService = CustomerService(generateHttpClient(config.customerServiceConfig))
+    private val accountService = AccountService(generateHttpClient(config.accountServiceConfig))
     private val transactionService =
-        TransactionService(generateHttpClient(config.transactionServiceUrl))
-    private val helperService = HelperService(generateHttpClient(config.helperServiceUrl))
+        TransactionService(generateHttpClient(config.transactionServiceConfig))
+    private val aiService =
+        AIService(aiServiceClient, accountService, transactionService)
+    private val parseService =
+        ParseService(parseServiceClient, accountService, transactionService, aiService)
 
     val loginController = LoginController(authService)
     val loginConfirmController = LoginConfirmController(authService)
@@ -36,16 +44,15 @@ class Dependencies {
     val goalDeleteController = GoalDeleteController(transactionService)
     val transactionCreateController = TransactionCreateController(transactionService, accountService)
     val transactionFindController = TransactionFindController(transactionService, accountService)
-    val transactionDeleteController = controllers.TransactionDeleteController(transactionService)
+    val transactionDeleteController = TransactionDeleteController(transactionService)
     val gapFetchController = GapFetchController(transactionService, accountService)
     val categoriesStatisticsController = CategoriesStatisticsController(transactionService, accountService)
     val oneTransactionFindController = OneTransactionFindController(transactionService)
-    val helperAdviceController = HelperAdviceController(helperService, transactionService, accountService)
+
     val transactionUpdateController = TransactionUpdateController(transactionService)
-    val createTinkoffTransactionsController = controllers.CreateTinkoffTransactionsController(transactionService)
-    val createTinkoffAccountsController = CreateTinkoffAccountsController(accountService)
     val customerUpdateController = CustomerUpdateController(customerService)
     val deleteUserController = DeleteUserController(accountService, authService, customerService, transactionService)
     val updateLimitController = UpdateLimitController(transactionService)
-    val helperMessagesController = HelperMessagesController(helperService)
+    val aiHelperController = AiHelperController(aiService)
+    val parseAndSaveTransactionController = ParseAndSaveTransactionController(parseService)
 }

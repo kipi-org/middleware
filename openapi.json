@@ -1,0 +1,231 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bank statement scanner API",
+    "description": "Here is Bank statement scanner fastapi backend, includes {SBER, T-Bank, Alfa-Bank}",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/checks/scan": {
+      "post": {
+        "tags": [
+          "checks"
+        ],
+        "summary": "Scan Checks",
+        "operationId": "scan_checks_checks_scan_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_scan_checks_checks_scan_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transactions"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Bank": {
+        "type": "string",
+        "enum": [
+          "TINKOFF",
+          "ALPHA",
+          "SBER"
+        ],
+        "title": "Bank"
+      },
+      "Body_scan_checks_checks_scan_post": {
+        "properties": {
+          "check_files": {
+            "items": {
+              "type": "string",
+              "format": "binary"
+            },
+            "type": "array",
+            "title": "Check Files"
+          }
+        },
+        "type": "object",
+        "required": [
+          "check_files"
+        ],
+        "title": "Body_scan_checks_checks_scan_post"
+      },
+      "Category": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Category"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "InOutType": {
+        "type": "string",
+        "enum": [
+          "INCOME",
+          "OUTCOME"
+        ],
+        "title": "InOutType"
+      },
+      "Transaction": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "accountId": {
+            "type": "integer",
+            "title": "Accountid"
+          },
+          "bank": {
+            "$ref": "#/components/schemas/Bank"
+          },
+          "inOutType": {
+            "$ref": "#/components/schemas/InOutType"
+          },
+          "amount": {
+            "type": "number",
+            "title": "Amount"
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Date"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "accountId",
+          "bank",
+          "inOutType",
+          "amount",
+          "date",
+          "category",
+          "description"
+        ],
+        "title": "Transaction"
+      },
+      "Transactions": {
+        "properties": {
+          "transactions": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Transaction"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Transactions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactions"
+        ],
+        "title": "Transactions"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

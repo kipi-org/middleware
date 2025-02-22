@@ -10,5 +10,6 @@ data class TransactionDraft(
     val amount: BigDecimal,
     val date: LocalDateTime?,
     val categoryId: Long,
-    val description: String?
+    val description: String?,
+    val foreignId: String? = null
 ) : Serializable

@@ -1,13 +1,15 @@
 package domain.services
 
 import dto.*
+import exceptions.CategoryException
+import exceptions.GoalCreateException
+import exceptions.LimitCreateException
 import exceptions.TransactionNotExistException
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.http.ContentType.Application.Json
-import exceptions.*
 import java.time.LocalDateTime
 
 class TransactionService(
@@ -21,7 +23,7 @@ class TransactionService(
         }
 
         when (response.status.value) {
-            403 -> throw exceptions.CategoryException(response.body<ErrorResponse>().message)
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
             else -> return response.body()
         }
     }
@@ -32,7 +34,7 @@ class TransactionService(
         }
 
         when (response.status.value) {
-            403 -> throw exceptions.CategoryException(response.body<ErrorResponse>().message)
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
             else -> return
         }
     }
@@ -60,7 +62,7 @@ class TransactionService(
         }
 
         when (response.status.value) {
-            403 -> throw exceptions.LimitCreateException(response.body<ErrorResponse>().message)
+            403 -> throw LimitCreateException(response.body<ErrorResponse>().message)
             else -> return response.body()
         }
     }
@@ -101,7 +103,7 @@ class TransactionService(
         }
     }
 
-    suspend fun findGoals(userId: Long): List<dto.Goal> {
+    suspend fun findGoals(userId: Long): List<Goal> {
         val response = client.get {
             url { path("/customer/$userId/goals") }
         }
@@ -125,7 +127,22 @@ class TransactionService(
         }
 
         when (response.status.value) {
-            403 -> throw exceptions.CategoryException(response.body<ErrorResponse>().message)
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
+
+    suspend fun createManyForeignTransactions(
+        userId: Long, accountId: Long, transactionDrafts: List<TransactionDraft>
+    ) {
+        val response = client.post {
+            url { path("/customer/$userId/account/$accountId/transactions/foreign") }
+            contentType(Json)
+            setBody(transactionDrafts)
+        }
+
+        when (response.status.value) {
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
             else -> return response.body()
         }
     }
@@ -183,7 +200,7 @@ class TransactionService(
         }
 
         when (response.status.value) {
-            403 -> throw exceptions.CategoryException(response.body<ErrorResponse>().message)
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
             else -> return response.body()
         }
     }
@@ -212,7 +229,7 @@ class TransactionService(
 
         when (response.status.value) {
             404 -> throw TransactionNotExistException(response.body<ErrorResponse>().message)
-            403 -> throw exceptions.CategoryException(response.body<ErrorResponse>().message)
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
             else -> return
         }
     }
@@ -232,22 +249,6 @@ class TransactionService(
 
         return response.body()
     }
-
-    suspend fun loadTinkoffTransactions(
-        userId: Long,
-        tinkoffXmlRequest: TinkoffXmlRequest
-    ) {
-        val response = client.post {
-            url { path("/customer/$userId/transactions/tinkoff") }
-            contentType(Json)
-            setBody(tinkoffXmlRequest)
-        }
-
-        when (response.status.value) {
-            403 -> throw InvalidForeignTransactionsException(response.body<ErrorResponse>().message)
-        }
-    }
-
 
     private fun List<Long>.toAccountsIdsString() = this.joinToString(separator = ",")
 }

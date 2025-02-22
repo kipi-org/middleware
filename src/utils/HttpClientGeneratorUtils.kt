@@ -1,5 +1,6 @@
 package utils
 
+import ServiceConfig
 import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -9,8 +10,12 @@ import io.ktor.serialization.jackson.*
 import mappers.JsonMapper.mapper
 
 object HttpClientGeneratorUtils {
-    fun generateHttpClient(host: String) = HttpClient {
-        install(HttpTimeout)
+    fun generateHttpClient(serviceConfig: ServiceConfig) = HttpClient {
+        install(HttpTimeout){
+            connectTimeoutMillis = serviceConfig.connectionTimeout
+            requestTimeoutMillis = serviceConfig.readTimeout
+            socketTimeoutMillis = serviceConfig.readTimeout
+        }
         install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.HEADERS
@@ -19,7 +24,7 @@ object HttpClientGeneratorUtils {
             register(Json, JacksonConverter(mapper))
         }
         defaultRequest {
-            this.host = host
+            this.host = serviceConfig.url
         }
     }
 }

@@ -8,6 +8,7 @@ import routes.AccountRoutes.createAccountRoutes
 import routes.AuthRoutes.createAuthRoutes
 import routes.CustomerRoutes.createCustomerRoutes
 import routes.HelperRoutes.createHelperRoutes
+import routes.ParserRoutes.createParserRoutes
 import routes.TransactionRoutes.createTransactionRoutes
 
 private val userIdKey = AttributeKey<Long>("userId")
@@ -38,6 +39,7 @@ fun Application.routes(deps: Dependencies) {
         createAccountRoutes(deps)
         createTransactionRoutes(deps)
         createHelperRoutes(deps)
+        createParserRoutes(deps)
     }
 }
 

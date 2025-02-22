@@ -94,12 +94,6 @@ object TransactionRoutes {
                 call.respond(OK, transactions)
             }
 
-            post<TinkoffXmlRequest>("/tinkoff") {
-                createTinkoffTransactionsController.handle(call.userId, it)
-
-                call.respond(OK)
-            }
-
             get("/gaps/{gapType}") {
                 val gaps =
                     gapFetchController.handle(
