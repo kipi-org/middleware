@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class RawParsedTransaction(
     val id: Long,
-    val accountId: Long,
+    val accountId: String,
     val bank: RawBankName,
     val inOutType: RawTransactionType,
     val amount: BigDecimal,

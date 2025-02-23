@@ -1,6 +1,7 @@
 package domain.clients.parser
 
 import domain.clients.parser.dto.RawParsedTransaction
+import domain.clients.parser.dto.RawParsedTransactionResponse
 import dto.ParseDto
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -31,7 +32,7 @@ class ParseServiceClient(
             )
         }
 
-        return response.body<List<RawParsedTransaction>>()
+        return response.body<RawParsedTransactionResponse>().transactions
     }
 }
 

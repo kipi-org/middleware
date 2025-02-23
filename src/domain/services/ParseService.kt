@@ -20,7 +20,7 @@ class ParseService(
         val rawParsedTransactions = parseServiceClient.parseTransactions(statement)
         val knownAccountsIds = accountService.findAccounts(userId).map { it.foreignAccountId }
         val unknownTransactionAccountsToType =
-            rawParsedTransactions.filterNot { it.accountId.toString() in knownAccountsIds }.distinctBy { it.accountId }
+            rawParsedTransactions.filterNot { it.accountId in knownAccountsIds }.distinctBy { it.accountId }
                 .map { it.accountId to it.bank.mapBankToAccountType() }
         accountService.createForeignAccounts(
             userId,
@@ -28,7 +28,7 @@ class ParseService(
                 AccountDraft(
                     it.second,
                     it.second.mapToColor(),
-                    it.first.toString()
+                    it.first
                 )
             })
 
@@ -36,22 +36,28 @@ class ParseService(
         val categories = transactionService.findCategories(userId)
         val transactionsWithResolvedCategories = aiService.classifyTransactions(rawParsedTransactions, categories)
 
-        accounts.forEach {
-            transactionService.createManyForeignTransactions(
-                userId,
-                it.id!!,
-                rawParsedTransactions.map { tran ->
-                    TransactionDraft(
-                        amount = tran.amount,
-                        date = tran.date,
-                        categoryId = categories.first { category ->
-                            category.name == (tran.category?.name
-                                ?: transactionsWithResolvedCategories.first { resolvedTransaction -> resolvedTransaction.id == tran.id }.category.name)
-                        }.id,
-                        description = tran.description,
-                        foreignId = tran.id.toString(),
-                    )
-                })
+        accounts.forEach { acc ->
+            val transactions =
+                rawParsedTransactions.filter { it.accountId == acc.foreignAccountId && acc.type == it.bank.mapBankToAccountType() }
+                    .map { tran ->
+                        TransactionDraft(
+                            amount = tran.amount,
+                            date = tran.date,
+                            categoryId = categories.first { category ->
+                                category.name == (tran.category?.name
+                                    ?: transactionsWithResolvedCategories.first { resolvedTransaction -> resolvedTransaction.id == tran.id }.category.name)
+                            }.id,
+                            description = tran.description,
+                            foreignId = tran.id.toString(),
+                        )
+                    }
+            if (transactions.isNotEmpty()) {
+                transactionService.createManyForeignTransactions(
+                    userId,
+                    acc.id!!,
+                    transactions,
+                )
+            }
         }
     }
 
