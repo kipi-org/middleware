@@ -27,7 +27,7 @@ class Dependencies {
     val revokeTokenController = RevokeTokenController(authService)
 
     val customerFindController = CustomerFindController(customerService)
-    val customerCreateController = CustomerCreateController(customerService)
+    val customerCreateController = CustomerCreateController(customerService, transactionService)
 
     val accountCreateController = AccountCreateController(accountService)
     val accountFindController = AccountFindController(accountService, transactionService)
