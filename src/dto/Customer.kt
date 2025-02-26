@@ -7,6 +7,5 @@ data class Customer(
     val userId: Long,
     val name: String,
     val surname: String,
-    val email: String,
     val dateOfCreate: LocalDateTime
 ) : Serializable
