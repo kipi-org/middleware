@@ -2,6 +2,7 @@ package domain.services
 
 import domain.clients.parser.ParseServiceClient
 import domain.clients.parser.dto.RawBankName
+import domain.clients.parser.dto.RawTransactionType
 import dto.AccountDraft
 import dto.AccountType
 import dto.ParseDto
@@ -41,7 +42,7 @@ class ParseService(
                 rawParsedTransactions.filter { it.accountId == acc.foreignAccountId && acc.type == it.bank.mapBankToAccountType() }
                     .map { tran ->
                         TransactionDraft(
-                            amount = tran.amount,
+                            amount = if (tran.inOutType == RawTransactionType.INCOME) tran.amount else tran.amount.negate(),
                             date = tran.date,
                             categoryId = categories.first { category ->
                                 category.name == (tran.category?.name
