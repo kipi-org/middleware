@@ -94,6 +94,14 @@ object TransactionRoutes {
                 call.respond(OK, transactions)
             }
 
+            get("/analysis") {
+                val stat = transactionAnalysisController.handle(
+                    call.userId,
+                )
+
+                call.respond(OK, stat)
+            }
+
             get("/gaps/{gapType}") {
                 val gaps =
                     gapFetchController.handle(

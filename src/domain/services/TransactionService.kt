@@ -205,6 +205,21 @@ class TransactionService(
         }
     }
 
+    suspend fun calculateTransactionsStatistics(
+        userId: Long,
+        accountsIds: List<Long>,
+    ): TransactionsStatistics {
+        val response = client.get {
+            url { path("/customer/$userId/transactions/statistics") }
+            parameter("accountsIds", accountsIds.toAccountsIdsString())
+        }
+
+        when (response.status.value) {
+            403 -> throw CategoryException(response.body<ErrorResponse>().message)
+            else -> return response.body()
+        }
+    }
+
     suspend fun deleteTransaction(userId: Long, transactionId: Long) {
         client.delete {
             url { path("/customer/$userId/transaction/$transactionId") }

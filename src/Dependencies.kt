@@ -55,4 +55,5 @@ class Dependencies {
     val updateLimitController = UpdateLimitController(transactionService)
     val aiHelperController = AiHelperController(aiService)
     val parseAndSaveTransactionController = ParseAndSaveTransactionController(parseService)
+    val transactionAnalysisController = TransactionAnalysisController(transactionService, accountService)
 }
