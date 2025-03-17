@@ -211,7 +211,7 @@ class TransactionService(
     ): TransactionsStatistics {
         val response = client.get {
             url { path("/customer/$userId/transactions/statistics") }
-            parameter("accountsIds", accountsIds.toAccountsIdsString())
+            if (accountsIds.isNotEmpty()) parameter("accountsIds", accountsIds.toAccountsIdsString())
         }
 
         when (response.status.value) {
