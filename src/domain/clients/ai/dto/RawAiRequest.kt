@@ -25,7 +25,7 @@ data class RawAiTransaction(
     val inOutType: String,
     val amount: BigDecimal,
     val date: LocalDateTime,
-    val category: AiCategory,
+    val category: AiCategory?,
     val description: String,
 )
 

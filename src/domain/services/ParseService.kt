@@ -46,7 +46,7 @@ class ParseService(
                             date = tran.date,
                             categoryId = categories.first { category ->
                                 category.name == (tran.category?.name
-                                    ?: transactionsWithResolvedCategories.first { resolvedTransaction -> resolvedTransaction.id == tran.id }.category.name)
+                                    ?: transactionsWithResolvedCategories.first { resolvedTransaction -> resolvedTransaction.id == tran.id }.category?.name ?: "Другое")
                             }.id,
                             description = tran.description,
                             foreignId = tran.id.toString(),
