@@ -1,6 +1,8 @@
 package domain.clients.parser
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import domain.clients.parser.dto.RawCategories
+import domain.clients.parser.dto.RawCategory
 import domain.clients.parser.dto.RawParsedTransaction
 import domain.clients.parser.dto.RawParsedTransactionResponse
 import dto.Category
@@ -22,7 +24,7 @@ class ParseServiceClient(
     ): List<RawParsedTransaction> {
         val objectMapper = ObjectMapper()
         val file = File("categories.json")
-        objectMapper.writeValue(file, categories)
+        objectMapper.writeValue(file, RawCategories(categories.map { RawCategory(it.id, it.name) }))
 
         val response = client.post {
             url { path("/checks/scan") }
