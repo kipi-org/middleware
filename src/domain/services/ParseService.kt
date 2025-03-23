@@ -18,7 +18,9 @@ class ParseService(
         userId: Long,
         statement: List<ParseDto>
     ) {
-        val rawParsedTransactions = parseServiceClient.parseTransactions(statement)
+        val categories = transactionService.findCategories(userId)
+
+        val rawParsedTransactions = parseServiceClient.parseTransactions(statement, categories)
         val knownAccountsIds = accountService.findAccounts(userId).map { it.foreignAccountId }
         val unknownTransactionAccountsToType =
             rawParsedTransactions.filterNot { it.accountId in knownAccountsIds }.distinctBy { it.accountId }
@@ -34,7 +36,6 @@ class ParseService(
             })
 
         val accounts = accountService.findAccounts(userId).filterNot { it.type == AccountType.MAIN }
-        val categories = transactionService.findCategories(userId)
         val transactionsWithResolvedCategories = aiService.classifyTransactions(rawParsedTransactions, categories)
 
         accounts.forEach { acc ->
