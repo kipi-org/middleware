@@ -32,13 +32,14 @@ class ParseServiceClient(
                     formData {
                         request.forEach {
                             this.append("file", it.bytes, Headers.build {
+                                append(HttpHeaders.ContentType, "application/pdf")
                                 append(HttpHeaders.ContentDisposition, "name=\"check_files\"; filename=\"${it.fileName}\"")
                             })
                         }
                         this.append("file", file.readBytes(), Headers.build {
+                            append(HttpHeaders.ContentType, "application/json")
                             append(HttpHeaders.ContentDisposition, "name=\"categories\"; filename=\"${file.name}\"")
                         })
-
                     },
                 )
             )
