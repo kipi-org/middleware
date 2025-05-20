@@ -21,14 +21,18 @@ class ParseService(
         val categories = transactionService.findCategories(userId)
 
         val rawParsedTransactions = parseServiceClient.parseTransactions(statement, categories)
+        val knownAccountsIds = accountService.findAccounts(userId).map { it.foreignAccountId }
+        val unknownTransactionAccountsToType =
+            rawParsedTransactions.filterNot { it.accountId in knownAccountsIds }.distinctBy { it.accountId }
+                .map { it.accountId to it.bank.mapBankToAccountType() }
 
         accountService.createForeignAccounts(
             userId,
-            rawParsedTransactions.map {
+            unknownTransactionAccountsToType.map {
                 AccountDraft(
-                    it.bank.mapBankToAccountType(),
-                    it.bank.mapBankToAccountType().mapToColor(),
-                    it.accountId,
+                    it.second,
+                    it.second.mapToColor(),
+                    it.first
                 )
             })
 
