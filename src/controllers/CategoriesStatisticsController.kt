@@ -1,11 +1,12 @@
 package controllers
 
 import domain.services.AccountService
+import domain.services.TransactionService
 import dto.CategoryStatistics
 import java.time.LocalDateTime
 
 class CategoriesStatisticsController(
-    private val transactionService: domain.services.TransactionService,
+    private val transactionService: TransactionService,
     private val accountService: AccountService
 ) {
     suspend fun handle(

@@ -21,22 +21,18 @@ class ParseService(
         val categories = transactionService.findCategories(userId)
 
         val rawParsedTransactions = parseServiceClient.parseTransactions(statement, categories)
-        val knownAccountsIds = accountService.findAccounts(userId).map { it.foreignAccountId }
-        val unknownTransactionAccountsToType =
-            rawParsedTransactions.filterNot { it.accountId in knownAccountsIds }.distinctBy { it.accountId }
-                .map { it.accountId to it.bank.mapBankToAccountType() }
+
         accountService.createForeignAccounts(
             userId,
-            unknownTransactionAccountsToType.map {
+            rawParsedTransactions.map {
                 AccountDraft(
-                    it.second,
-                    it.second.mapToColor(),
-                    it.first
+                    it.bank.mapBankToAccountType(),
+                    it.bank.mapBankToAccountType().mapToColor(),
+                    it.accountId,
                 )
             })
 
         val accounts = accountService.findAccounts(userId).filterNot { it.type == AccountType.MAIN }
-        val transactionsWithResolvedCategories = aiService.classifyTransactions(rawParsedTransactions, categories)
 
         accounts.forEach { acc ->
             val transactions =
@@ -46,8 +42,7 @@ class ParseService(
                             amount = if (tran.inOutType == RawTransactionType.INCOME) tran.amount else tran.amount.negate(),
                             date = tran.date,
                             categoryId = categories.first { category ->
-                                category.name == (tran.category?.name
-                                    ?: transactionsWithResolvedCategories.first { resolvedTransaction -> resolvedTransaction.id == tran.id }.category?.name ?: "Другое")
+                                category.name == (tran.category?.name ?: "Другое")
                             }.id,
                             description = tran.description,
                             foreignId = tran.id.toString(),
